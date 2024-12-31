@@ -12,7 +12,8 @@ const createAdmin = async () => {
     first_name: "admin",
     last_name: "admin",
     password: "Pa$$word",
-    role: roles.ADMIN, // Admin role
+    username: 'admin',
+    role: roles.ADMIN,
   });
 
   await admin.save();

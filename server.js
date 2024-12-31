@@ -4,8 +4,6 @@ import rateLimit from "express-rate-limit";
 import createError from "http-errors";
 
 import connectDB from "./config/database.js";
-import roles from "./constant/roles.js";
-import authenticate from "./middleware/auth.js";
 import authRouter from "./routes/auth.js";
 import usersRouter from "./routes/users.js";
 import createAdmin from "./helper/createAdmin.js";
@@ -15,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per window
+  max: 20, // limit each IP to 20 requests per window
 });
 
 // Middleware

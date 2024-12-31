@@ -13,6 +13,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      require: true,
+    },
     email: {
       type: String,
       required: function () {

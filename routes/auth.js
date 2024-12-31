@@ -1,17 +1,28 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import roles from "../constant/roles.js";
+import User from "../schema/user.schema.js";
 
 const router = Router();
 
 router.post("/login", async (req, res) => {
-  const { username, password, role } = req.body;
+  const { username, password } = req.body;
+  const { password: hash, role } = await User.findOne({ role: roles.ADMIN });
+
+  const isMatch = await bcrypt.compare(password, hash);
+
+  if (!isMatch) {
+    res.status(403).send({
+      message: "Invalid credentials. Please try again.",
+    });
+    return;
+  }
+
   const user = { name: username, role };
 
-//   const isMatch = await bcrypt.compare(password, hash);
-
   const accessToken = jwt.sign(user, process.env.JWT_SECRET);
-  res.json({ accessToken });
+  res.send({ accessToken });
 });
 
 router.post("/signup", async (req, res) => {
