@@ -1,46 +1,54 @@
-import createError from "http-errors";
-import express, { json, urlencoded } from "express";
 import cookieParser from "cookie-parser";
+import express, { json, urlencoded } from "express";
 import rateLimit from "express-rate-limit";
+import createError from "http-errors";
 
-import usersRouter from "./routes/users.js";
-import authRouter from "./routes/auth.js";
-import authenticate from "./middleware/auth.js";
+import connectDB from "./config/database.js";
 import roles from "./constant/roles.js";
+import authenticate from "./middleware/auth.js";
+import authRouter from "./routes/auth.js";
+import usersRouter from "./routes/users.js";
+import createAdmin from "./helper/createAdmin.js";
 
 const app = express();
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per window
 });
 
+// Middleware
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(limiter);
 
 // Routes
-app.use("/auth", limiter, authRouter);
-app.use("/api/users", limiter, authenticate([roles.ADMIN]), usersRouter);
+app.use("/auth", authRouter);
+app.use("/api/users", usersRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
+// Handle 404 (Route not found)
+app.use((req, res, next) => {
+  next(createError(404, "Route not found"));
 });
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render("error");
+// Error handler
+app.use((err, req, res, next) => {
+  const status = err.status || 500;
+  res.status(status).json({
+    error: {
+      message: err.message || "Internal Server Error",
+      status,
+    },
+  });
 });
 
-app.listen(PORT, () => console.log(`Server is running on port: ${PORT}`));
+// Connect to Database and Start Server
+connectDB();
+createAdmin();
+app.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
+});
 
 export default app;
