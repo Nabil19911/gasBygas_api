@@ -1,6 +1,7 @@
 const schemaModels = {
   Outlet: "Outlet",
-  User: "User"
+  User: "User",
+  Employee: "Employee"
 };
 
 export default schemaModels;

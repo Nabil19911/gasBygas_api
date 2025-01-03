@@ -6,7 +6,8 @@ import cors from "cors";
 
 import connectDB from "./config/database.js";
 import authRouter from "./routes/auth.js";
-import usersRouter from "./routes/users.js";
+import employeeRouter from "./routes/employee.js";
+import customerRouter from "./routes/customer.js";
 import createAdmin from "./helper/createAdmin.js";
 
 const app = express();
@@ -30,7 +31,8 @@ app.use(limiter);
 
 // Routes
 app.use("/auth", authRouter);
-app.use("/api/users", usersRouter);
+app.use("/api/employee", employeeRouter);
+app.use("/api/customer", customerRouter);
 
 // Handle 404 (Route not found)
 app.use((req, res, next) => {
