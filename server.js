@@ -2,6 +2,7 @@ import cookieParser from "cookie-parser";
 import express, { json, urlencoded } from "express";
 import rateLimit from "express-rate-limit";
 import createError from "http-errors";
+import cors from "cors";
 
 import connectDB from "./config/database.js";
 import authRouter from "./routes/auth.js";
@@ -16,7 +17,12 @@ const limiter = rateLimit({
   max: 20, // limit each IP to 20 requests per window
 });
 
+const corsOptions = {
+  origin: "http://localhost:3000", // Allow only from 3000 port
+};
+
 // Middleware
+app.use(cors(corsOptions));
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
