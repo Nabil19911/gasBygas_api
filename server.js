@@ -8,7 +8,7 @@ import connectDB from "./config/database.js";
 import authRouter from "./routes/auth.js";
 import employeeRouter from "./routes/employee.js";
 import customerRouter from "./routes/customer.js";
-import createAdmin from "./helper/createAdmin.js";
+import { createAdmin } from "./helper/employeeHelper.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;

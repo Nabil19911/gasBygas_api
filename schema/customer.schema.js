@@ -17,13 +17,7 @@ const customerSchema = new Schema(
         return this.businessType === businessTypeConstant.Individual;
       },
     },
-    username: {
-      type: String,
-      required: function () {
-        return this.businessType === businessTypeConstant.Organization;
-      },
-    },
-    buiness_type: {
+    business_type: {
       type: String,
       enum: Object.values(businessTypeConstant),
       default: businessTypeConstant.Individual,
@@ -42,8 +36,8 @@ const customerSchema = new Schema(
         return this.businessType === businessTypeConstant.Individual;
       },
     },
-    brfile: {
-      type: Buffer, // Store the file data as binary
+    brFile: {
+      type: String, // Store the file data as binary
       required: function () {
         return this.businessType === businessTypeConstant.Organization;
       },
@@ -71,6 +65,10 @@ const customerSchema = new Schema(
         type: String,
         required: true,
       },
+    },
+    createdBy: {
+      type: String,
+      require: true,
     },
     password: {
       type: String,
@@ -102,6 +100,6 @@ customerSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const Customer = model(schemaModels.Employee, customerSchema);
+const Customer = model(schemaModels.Customer, customerSchema);
 
 export default Customer;

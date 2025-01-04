@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
 
-const userSchema = new Schema(
+const employeeSchema = new Schema(
   {
     first_name: {
       type: String,
@@ -49,7 +49,7 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
+employeeSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
@@ -63,10 +63,10 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-userSchema.methods.matchPassword = async function (enteredPassword) {
+employeeSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-const User = model(schemaModels.User, userSchema);
+const Employee = model(schemaModels.Employee, employeeSchema);
 
-export default User;
+export default Employee;

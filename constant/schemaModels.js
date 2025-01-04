@@ -1,6 +1,6 @@
 const schemaModels = {
   Outlet: "Outlet",
-  User: "User",
+  Customer: "Customer",
   Employee: "Employee"
 };
 
