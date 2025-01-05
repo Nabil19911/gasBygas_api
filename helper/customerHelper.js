@@ -1,6 +1,5 @@
 import businessTypeConstant from "../constant/businessType.js";
-import roles from "../constant/roles.js";
-import Customer from "../schema/customer.schema.js";
+import Customer from "../models/customer.model.js";
 
 export const checkIfExists = async ({ field, value, errorMessage }) => {
   const existingRecord = await Customer.findOne({ [field]: value });

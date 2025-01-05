@@ -5,9 +5,9 @@ import createError from "http-errors";
 import cors from "cors";
 
 import connectDB from "./config/database.js";
-import authRouter from "./routes/auth.js";
-import employeeRouter from "./routes/employee.js";
-import customerRouter from "./routes/customer.js";
+import authRouter from "./routes/auth.route.js";
+import employeeRouter from "./routes/employee.route.js";
+import customerRouter from "./routes/customer.route.js";
 import { createAdmin } from "./helper/employeeHelper.js";
 
 const app = express();

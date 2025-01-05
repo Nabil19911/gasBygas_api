@@ -1,27 +1,27 @@
 import bcrypt from "bcrypt";
-import { Router } from "express";
 import businessTypeConstant from "../constant/businessType.js";
-import { createJWT } from "../helper/authHelper.js";
-import { checkIfExists, prepareCustomerData } from "../helper/customerHelper.js";
-import Customer from "../schema/customer.schema.js";
-import Employee from "../schema/employee.schema.js";
-import { upload } from "../middleware/upload.js";
 import roles from "../constant/roles.js";
-import jwt from "jsonwebtoken";
+import { createJWT } from "../helper/authHelper.js";
+import {
+  checkIfExists,
+  prepareCustomerData,
+} from "../helper/customerHelper.js";
+import Employee from "../models/employee.model.js";
+import Customer from "../models/customer.model.js";
 
-const router = Router();
-
-router.post("/employee/login", async (req, res) => {
+/**
+ * Employee Login
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const employeeLogin = async (req, res) => {
   const { username, password } = req.body;
   try {
-    // Check if a employee exists with the provided username and password is matched
     const employee = await Employee.findOne({ username });
-    const isMatch = await bcrypt.compare(password, employee.password);
-    if (!employee || !isMatch) {
-      res.status(401).send({
+    if (!employee || !(await bcrypt.compare(password, employee.password))) {
+      return res.status(401).send({
         message: "Invalid credentials. Please try again.",
       });
-      return;
     }
 
     const user = { username, role: employee.role };
@@ -34,25 +34,24 @@ router.post("/employee/login", async (req, res) => {
       message: `Server error. Please try again later: ${error.message}`,
     });
   }
-});
+};
 
-router.post("/login", async (req, res) => {
+/**
+ * Customer Login
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const customerLogin = async (req, res) => {
   const { email, password } = req.body;
-
   try {
-    // Check if a customer exists with the provided email and password is matched
     const customer = await Customer.findOne({ email });
-    const isMatch = await bcrypt.compare(password, customer.password);
-    if (!customer || !isMatch) {
-      return res
-        .status(401)
-        .send({ message: "Invalid credentials. Please try again." });
+    if (!customer || !(await bcrypt.compare(password, customer.password))) {
+      return res.status(401).send({
+        message: "Invalid credentials. Please try again.",
+      });
     }
 
-    const user = {
-      username: customer.email,
-      role: customer.createdBy,
-    };
+    const user = { username: customer.email, role: customer.createdBy };
     const accessToken = createJWT(user);
 
     res.status(200).send({ accessToken });
@@ -62,9 +61,14 @@ router.post("/login", async (req, res) => {
       message: `Server error. Please try again later: ${error.message}`,
     });
   }
-});
+};
 
-router.post("/fresh-token", (req, res) => {
+/**
+ * Fresh Token
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const freshToken = (req, res) => {
   const { exp, role, username } = req.body;
 
   const user = { name: username, role };
@@ -76,9 +80,14 @@ router.post("/fresh-token", (req, res) => {
     },
     process.env.JWT_SECRET
   );
-});
+};
 
-router.post("/register", upload.single("brFile"), async (req, res) => {
+/**
+ * Customer Registration
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const registerCustomer = async (req, res) => {
   const {
     first_name,
     last_name,
@@ -137,7 +146,7 @@ router.post("/register", upload.single("brFile"), async (req, res) => {
         last_name,
         nic,
         brn,
-        brFile: req.file ? req.file.path : null, // Save file path if uploaded
+        brFile: req.file ? req.file.path : null,
         contact,
         email,
         full_address,
@@ -152,11 +161,7 @@ router.post("/register", upload.single("brFile"), async (req, res) => {
     const customer = new Customer(data);
     const respond = await customer.save();
 
-    const user = {
-      username: data.email,
-      role: data.role,
-    };
-
+    const user = { username: data.email, role: data.role };
     const accessToken = createJWT(user);
 
     res.status(201).send({
@@ -170,6 +175,4 @@ router.post("/register", upload.single("brFile"), async (req, res) => {
       message: `Server error. Please try again later: ${error.message}`,
     });
   }
-});
-
-export default router;
+};

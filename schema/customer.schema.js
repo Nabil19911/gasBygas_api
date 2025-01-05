@@ -1,9 +1,7 @@
-import { model, Schema } from "mongoose";
-import bcrypt from "bcryptjs";
-import schemaModels from "../constant/schemaModels.js";
+import { Schema } from "mongoose";
 import businessTypeConstant from "../constant/businessType.js";
 
-const customerSchema = new Schema(
+const CustomerSchema = new Schema(
   {
     first_name: {
       type: String,
@@ -25,9 +23,7 @@ const customerSchema = new Schema(
     },
     email: {
       type: String,
-      required: function () {
-        return "Email is required.";
-      },
+      required: true,
       unique: true,
     },
     is_approved: {
@@ -43,7 +39,7 @@ const customerSchema = new Schema(
       },
     },
     brFile: {
-      type: String, // Store the file data as binary
+      type: String,
       required: function () {
         return this.businessType === businessTypeConstant.Organization;
       },
@@ -74,7 +70,7 @@ const customerSchema = new Schema(
     },
     createdBy: {
       type: String,
-      require: true,
+      required: true,
     },
     password: {
       type: String,
@@ -86,26 +82,4 @@ const customerSchema = new Schema(
   }
 );
 
-// Hash password and create username before saving
-customerSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Method to match password
-customerSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-const Customer = model(schemaModels.Customer, customerSchema);
-
-export default Customer;
+export default CustomerSchema;

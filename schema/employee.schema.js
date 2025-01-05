@@ -1,9 +1,8 @@
-import { model, Schema } from "mongoose";
-import bcrypt from "bcryptjs";
+import { Schema } from "mongoose";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
 
-const employeeSchema = new Schema(
+const EmployeeSchema = new Schema(
   {
     first_name: {
       type: String,
@@ -15,7 +14,7 @@ const employeeSchema = new Schema(
     },
     username: {
       type: String,
-      require: true,
+      required: true,
     },
     email: {
       type: String,
@@ -49,24 +48,4 @@ const employeeSchema = new Schema(
   }
 );
 
-employeeSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
-
-employeeSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-const Employee = model(schemaModels.Employee, employeeSchema);
-
-export default Employee;
+export default EmployeeSchema;

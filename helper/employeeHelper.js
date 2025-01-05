@@ -1,5 +1,5 @@
 import roles from "../constant/roles.js";
-import Employee from "../schema/employee.schema.js";
+import Employee from "../models/employee.model.js";
 
 export const createAdmin = async () => {
   const existingAdmin = await Employee.findOne({ role: roles.ADMIN });
