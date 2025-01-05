@@ -1,4 +1,5 @@
 import businessTypeConstant from "../constant/businessType.js";
+import roles from "../constant/roles.js";
 import Customer from "../schema/customer.schema.js";
 
 export const checkIfExists = async ({ field, value, errorMessage }) => {
@@ -8,14 +9,14 @@ export const checkIfExists = async ({ field, value, errorMessage }) => {
   }
 };
 
-export const prepareUserData = ({ businessType, userDetails }) => {
+export const prepareCustomerData = ({ businessType, userDetails }) => {
   const commonData = {
     business_type: businessType,
     contact: userDetails.contact,
     email: userDetails.email,
     full_address: JSON.parse(userDetails.full_address),
     password: userDetails.hashedPassword,
-    createdBy: userDetails.createdBy,
+    createdBy: userDetails.role,
   };
 
   if (businessType === businessTypeConstant.Organization) {
@@ -23,6 +24,7 @@ export const prepareUserData = ({ businessType, userDetails }) => {
       ...commonData,
       brFile: userDetails.brFile,
       brn: userDetails.brn,
+      is_approved: userDetails.is_approved,
     };
   }
 

@@ -2,10 +2,12 @@ import bcrypt from "bcrypt";
 import { Router } from "express";
 import businessTypeConstant from "../constant/businessType.js";
 import { createJWT } from "../helper/authHelper.js";
-import { checkIfExists, prepareUserData } from "../helper/customerHelper.js";
+import { checkIfExists, prepareCustomerData } from "../helper/customerHelper.js";
 import Customer from "../schema/customer.schema.js";
 import Employee from "../schema/employee.schema.js";
 import { upload } from "../middleware/upload.js";
+import roles from "../constant/roles.js";
+import jwt from "jsonwebtoken";
 
 const router = Router();
 
@@ -22,7 +24,7 @@ router.post("/employee/login", async (req, res) => {
       return;
     }
 
-    const user = { name: username, role: employee.role };
+    const user = { username, role: employee.role };
     const accessToken = createJWT(user);
 
     res.status(200).send({ accessToken });
@@ -48,8 +50,8 @@ router.post("/login", async (req, res) => {
     }
 
     const user = {
-      email: customer.email,
-      businessType: customer.businessType,
+      username: customer.email,
+      role: customer.createdBy,
     };
     const accessToken = createJWT(user);
 
@@ -128,18 +130,20 @@ router.post("/register", upload.single("brFile"), async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Prepare the data to be saved
-    const data = prepareUserData({
+    const data = prepareCustomerData({
       businessType: business_type,
       userDetails: {
         first_name,
         last_name,
         nic,
         brn,
-        brFile:  req.file ? req.file.path : null, // Save file path if uploaded
+        brFile: req.file ? req.file.path : null, // Save file path if uploaded
         contact,
         email,
         full_address,
         hashedPassword,
+        role: roles.CUSTOMER,
+        is_approved: false,
         createdBy,
       },
     });
@@ -148,9 +152,17 @@ router.post("/register", upload.single("brFile"), async (req, res) => {
     const customer = new Customer(data);
     const respond = await customer.save();
 
+    const user = {
+      username: data.email,
+      role: data.role,
+    };
+
+    const accessToken = createJWT(user);
+
     res.status(201).send({
       message: "Customer registered successfully.",
       data: respond,
+      accessToken,
     });
   } catch (error) {
     console.error(error.message);

@@ -14,7 +14,7 @@ const authenticate = (roles) => (req, res, next) => {
     }
 
     // Check if user roles include any of the required roles
-    const hasRole = roles.includes(user.role.toUpperCase())
+    const hasRole = roles.includes(user.role.toUpperCase());
     if (!hasRole) {
       return res.sendStatus(403); // Forbidden
     }

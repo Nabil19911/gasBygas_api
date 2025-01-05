@@ -30,6 +30,12 @@ const customerSchema = new Schema(
       },
       unique: true,
     },
+    is_approved: {
+      type: Boolean,
+      required: function () {
+        return this.businessType === businessTypeConstant.Organization;
+      },
+    },
     nic: {
       type: String,
       required: function () {

@@ -2,6 +2,7 @@ const roles = {
   DISPATCH_OFFICER: "DISPATCH_OFFICER",
   BRANCH_MANAGER: "BRANCH_MANAGER",
   ADMIN: "ADMIN",
+  CUSTOMER: "CUSTOMER",
 };
 
 export default roles;
