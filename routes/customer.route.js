@@ -2,14 +2,14 @@ import { Router } from "express";
 import authenticate from "../middleware/auth.js";
 import roles from "../constant/roles.js";
 import {
-  getCustomers,
+  getAllCustomers,
   getCustomerProfile,
 } from "../controllers/customer.controller.js";
 
 const router = Router();
 
 // Example resource route
-router.get("/", authenticate([roles.ADMIN]), getCustomers);
+router.get("/", authenticate([roles.ADMIN]), getAllCustomers);
 
 // Get customer profile route
 router.post(
