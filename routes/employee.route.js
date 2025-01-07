@@ -1,15 +1,15 @@
 import { Router } from "express";
-import authenticate from "../middleware/auth.js";
 import roles from "../constant/roles.js";
 import {
+  getAllEmployees,
   getEmployeeProfile,
-  getEmployees,
 } from "../controllers/employee.controller.js";
+import authenticate from "../middleware/auth.js";
 
 const router = Router();
 
 // Default route
-router.get("/", authenticate(roles.ADMIN), getEmployees);
+router.get("/", authenticate(roles.ADMIN), getAllEmployees);
 
 // Get Employee Profile
 router.post(

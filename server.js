@@ -51,10 +51,10 @@ app.use((err, req, res, next) => {
 });
 
 // Connect to Database and Start Server
-connectDB();
-createAdmin();
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
+  connectDB();
+  createAdmin();
 });
 
 export default app;

@@ -16,20 +16,9 @@ export const getCustomerProfile = async (req, res) => {
     }
 
     const organizationData = {
-      brFile: customer.brFile,
-      brn: customer.brn,
-      business_type: customer.business_type,
-      contact: customer.contact,
-      createdBy: customer.createdBy,
+      ...customer._doc,
       role: customer.createdBy,
-      email: customer.email,
-      full_address: {
-        district: customer.full_address.district,
-        post_code: customer.full_address.post_code,
-        address: customer.full_address.address,
-      },
-      is_approved: customer.is_approved,
-      id: customer._id,
+      password: undefined,
     };
 
     res.status(200).send({ data: organizationData });
@@ -55,6 +44,27 @@ export const getAllCustomers = async (req, res) => {
     res.status(200).send({ data: customers });
   } catch (error) {
     console.error("Error fetching customers: ", error.message);
+    res.status(400).send({ error: `Error: ${error.message}` });
+  }
+};
+
+/**
+ * Create new customer
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const createNewCustomer = async (req, res) => {
+  try {
+    console.log(res.body)
+    // const customers = await Customer.find({}).select("-password");
+
+    // if (!customers) {
+    //   throw new Error("Customers are not found");
+    // }
+
+    // res.status(200).send({ data: customers });
+  } catch (error) {
+    console.error("Error creating customers: ", error.message);
     res.status(400).send({ error: `Error: ${error.message}` });
   }
 };

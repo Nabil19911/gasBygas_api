@@ -30,10 +30,21 @@ export const getEmployeeProfile = async (req, res) => {
 };
 
 /**
- * Get employee list
+ * Get All Employees
  * @param {Request} req
  * @param {Response} res
  */
-export const getEmployees = (req, res) => {
-  res.send("respond with a resource");
+export const getAllEmployees = async (req, res) => {
+  try {
+    const employees = await Employee.find().select("-password");
+
+    if (!employees) {
+      throw new Error("Employees are not found");
+    }
+
+    res.status(200).send({ data: employees });
+  } catch (error) {
+    console.error("Error fetching Employees: ", error.message);
+    res.status(400).send({ error: `Error: ${error.message}` });
+  }
 };

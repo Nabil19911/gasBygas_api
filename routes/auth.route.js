@@ -4,7 +4,7 @@ import {
   employeeLogin,
   customerLogin,
   freshToken,
-  registerCustomer,
+  register,
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -19,6 +19,6 @@ router.post("/login", customerLogin);
 router.post("/fresh-token", freshToken);
 
 // Customer registration
-router.post("/register", upload.single("brFile"), registerCustomer);
+router.post("/register", upload.single("brFile"), register);
 
 export default router;

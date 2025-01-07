@@ -2,6 +2,7 @@ import { Router } from "express";
 import authenticate from "../middleware/auth.js";
 import roles from "../constant/roles.js";
 import {
+  createNewCustomer,
   getAllCustomers,
   getCustomerProfile,
 } from "../controllers/customer.controller.js";
@@ -21,6 +22,12 @@ router.post(
     roles.DISPATCH_OFFICER,
   ]),
   getCustomerProfile
+);
+
+router.post(
+  "/create/",
+  authenticate([roles.ADMIN, roles.BRANCH_MANAGER]),
+  createNewCustomer
 );
 
 export default router;
