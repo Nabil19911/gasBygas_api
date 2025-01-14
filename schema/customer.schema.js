@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import businessTypeConstant from "../constant/businessType.js";
+import activeStatus from "../constant/activeStatus.js";
 
 const CustomerSchema = new Schema(
   {
@@ -50,6 +51,12 @@ const CustomerSchema = new Schema(
         return this.businessType === businessTypeConstant.Organization;
       },
     },
+    business_name: {
+      type: String,
+      required: function () {
+        return this.businessType === businessTypeConstant.Organization;
+      },
+    },
     contact: {
       type: String,
       required: true,
@@ -67,6 +74,11 @@ const CustomerSchema = new Schema(
         type: String,
         required: true,
       },
+    },
+    status: {
+      type: String,
+      enum: Object.values(activeStatus),
+      default: activeStatus.ACTIVE,
     },
     createdBy: {
       type: String,

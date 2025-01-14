@@ -1,13 +1,7 @@
 import bcrypt from "bcrypt";
-import businessTypeConstant from "../constant/businessType.js";
-import roles from "../constant/roles.js";
 import { createJWT, registerCustomer } from "../helper/authHelper.js";
-import {
-  checkIfExists,
-  prepareCustomerData,
-} from "../helper/customerHelper.js";
 import Employee from "../models/employee.model.js";
-import Customer from "../models/customer.model.js";
+import User from "../models/user.model.js";
 
 /**
  * Employee Login
@@ -37,22 +31,23 @@ export const employeeLogin = async (req, res) => {
 };
 
 /**
- * Customer Login
+ * User Login
  * @param {Request} req
  * @param {Response} res
  */
 export const customerLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const customer = await Customer.findOne({ email });
-    if (!customer || !(await bcrypt.compare(password, customer.password))) {
+    const user = await User.findOne({ email });
+
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).send({
         message: "Invalid credentials. Please try again.",
       });
     }
 
-    const user = { username: customer.email, role: customer.createdBy };
-    const accessToken = createJWT(user);
+    const userDetails = { username: user.email, role: user.created_by };
+    const accessToken = createJWT(userDetails);
 
     res.status(200).send({ accessToken });
   } catch (error) {
@@ -85,13 +80,13 @@ export const freshToken = async (req, res) => {
 };
 
 /**
- * Customer Registration
+ * User Registration
  * @param {Request} req
  * @param {Response} res
  */
 export const register = async (req, res) => {
   try {
-    const { respond, accessToken } = await registerCustomer(req.body);
+    const { respond, accessToken } = await registerCustomer(req, res);
 
     res.status(201).send({
       message: "Customer registered successfully.",

@@ -8,6 +8,7 @@ import connectDB from "./config/database.js";
 import authRouter from "./routes/auth.route.js";
 import employeeRouter from "./routes/employee.route.js";
 import customerRouter from "./routes/customer.route.js";
+import userRouter from "./routes/user.route.js";
 import { createAdmin } from "./helper/employeeHelper.js";
 
 const app = express();
@@ -33,6 +34,7 @@ app.use(limiter);
 app.use("/auth", authRouter);
 app.use("/api/employee", employeeRouter);
 app.use("/api/customer", customerRouter);
+app.use("/api/user", userRouter);
 
 // Handle 404 (Route not found)
 app.use((req, res, next) => {

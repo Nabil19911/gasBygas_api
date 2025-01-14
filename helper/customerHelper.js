@@ -1,4 +1,5 @@
 import businessTypeConstant from "../constant/businessType.js";
+import requestStatus from "../constant/requestStatus.js";
 import Customer from "../models/customer.model.js";
 
 export const checkIfExists = async ({ field, value, errorMessage }) => {
@@ -13,24 +14,33 @@ export const prepareCustomerData = ({ businessType, userDetails }) => {
     business_type: businessType,
     contact: userDetails.contact,
     email: userDetails.email,
-    full_address: JSON.parse(userDetails.full_address),
+    full_address: userDetails.address,
     password: userDetails.hashedPassword,
-    createdBy: userDetails.role,
+    status: userDetails.status,
+    created_by: userDetails.role,
+    role: userDetails.role,
   };
+
+  const { organization, individual } = userDetails;
 
   if (businessType === businessTypeConstant.Organization) {
     return {
       ...commonData,
-      brFile: userDetails.brFile,
-      brn: userDetails.brn,
-      is_approved: userDetails.is_approved,
+      organization_details: {
+        ...organization,
+        business_registration_certification_path:
+          userDetails.business_registration_certification_path,
+        approval_status: requestStatus.PENDING,
+      },
     };
   }
 
   return {
     ...commonData,
-    first_name: userDetails.first_name,
-    last_name: userDetails.last_name,
-    nic: userDetails.nic,
+    individual_details: {
+      first_name: individual.first_name,
+      last_name: individual.last_name,
+      nic: individual.nic,
+    },
   };
 };

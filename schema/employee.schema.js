@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
+import activeStatus from "../constant/activeStatus.js";
 
 const EmployeeSchema = new Schema(
   {
@@ -12,9 +13,10 @@ const EmployeeSchema = new Schema(
       type: String,
       required: true,
     },
-    username: {
+    status: {
       type: String,
-      required: true,
+      enum: Object.values(activeStatus),
+      default: activeStatus.ACTIVE,
     },
     email: {
       type: String,
