@@ -9,6 +9,7 @@ import authRouter from "./routes/auth.route.js";
 import employeeRouter from "./routes/employee.route.js";
 import customerRouter from "./routes/customer.route.js";
 import userRouter from "./routes/user.route.js";
+import outletRouter from "./routes/outlet.route.js";
 import { createAdmin } from "./helper/employeeHelper.js";
 
 const app = express();
@@ -16,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // limit each IP to 20 requests per window
+  max: 100, // limit each IP to 20 requests per window
 });
 
 const corsOptions = {
@@ -35,6 +36,7 @@ app.use("/auth", authRouter);
 app.use("/api/employee", employeeRouter);
 app.use("/api/customer", customerRouter);
 app.use("/api/user", userRouter);
+app.use("/api/outlet", outletRouter);
 
 // Handle 404 (Route not found)
 app.use((req, res, next) => {
