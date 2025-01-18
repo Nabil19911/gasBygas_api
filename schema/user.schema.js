@@ -40,6 +40,7 @@ const UserSchema = new Schema({
   status: {
     type: String,
     enum: Object.values(activeStatus),
+    default: activeStatus.ACTIVE,
     required: true,
   },
   created_by: {
@@ -63,13 +64,13 @@ const UserSchema = new Schema({
       },
     },
   },
-  organization_details: {
-    business_registration_certification_path: {
-      type: String,
-      required: function () {
-        return this.business_type === businessTypeConstant.Organization;
-      },
+  business_registration_certification_path: {
+    type: String,
+    required: function () {
+      return this.business_type === businessTypeConstant.Organization;
     },
+  },
+  organization_details: {
     business_registration_number: {
       type: String,
       required: function () {

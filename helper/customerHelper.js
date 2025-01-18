@@ -1,9 +1,9 @@
 import businessTypeConstant from "../constant/businessType.js";
 import requestStatus from "../constant/requestStatus.js";
-import Customer from "../models/customer.model.js";
+import User from "../models/user.model.js";
 
 export const checkIfExists = async ({ field, value, errorMessage }) => {
-  const existingRecord = await Customer.findOne({ [field]: value });
+  const existingRecord = await User.findOne({ [field]: value });
   if (existingRecord) {
     throw new Error(errorMessage);
   }
@@ -19,6 +19,8 @@ export const prepareCustomerData = ({ businessType, userDetails }) => {
     status: userDetails.status,
     created_by: userDetails.role,
     role: userDetails.role,
+    business_registration_certification_path:
+      userDetails.business_registration_certification_path,
   };
 
   const { organization, individual } = userDetails;
@@ -28,8 +30,6 @@ export const prepareCustomerData = ({ businessType, userDetails }) => {
       ...commonData,
       organization_details: {
         ...organization,
-        business_registration_certification_path:
-          userDetails.business_registration_certification_path,
         approval_status: requestStatus.PENDING,
       },
     };

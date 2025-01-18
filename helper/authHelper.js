@@ -28,7 +28,6 @@ export const registerCustomer = async (req, res) => {
     full_address,
     password,
   } = req.body;
-
   
   const organization = organization_details
   ? JSON.parse(organization_details)
@@ -55,7 +54,7 @@ export const registerCustomer = async (req, res) => {
   // For 'Organization', check BRN uniqueness and validate file upload
   if (business_type === businessTypeConstant.Organization) {
     await checkIfExists({
-      field: "brn",
+      field: "business_registration_number",
       value: organization.business_registration_number,
       errorMessage: "BRN already taken.",
     });

@@ -18,6 +18,10 @@ const EmployeeSchema = new Schema(
       enum: Object.values(activeStatus),
       default: activeStatus.ACTIVE,
     },
+    contact: {
+      type: String,
+      required: true
+    },
     email: {
       type: String,
       required: function () {

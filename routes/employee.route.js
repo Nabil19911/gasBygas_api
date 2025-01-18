@@ -1,6 +1,7 @@
 import { Router } from "express";
 import roles from "../constant/roles.js";
 import {
+  createNewEmployee,
   getAllEmployees,
   getEmployeeProfile,
 } from "../controllers/employee.controller.js";
@@ -17,5 +18,8 @@ router.post(
   authenticate([roles.ADMIN, roles.BRANCH_MANAGER, roles.DISPATCH_OFFICER]),
   getEmployeeProfile
 );
+
+// Get Employee Profile
+router.post("/create/", authenticate([roles.ADMIN]), createNewEmployee);
 
 export default router;
