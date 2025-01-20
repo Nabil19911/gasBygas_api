@@ -19,6 +19,10 @@ router.post("/login", customerLogin);
 router.post("/fresh-token", freshToken);
 
 // Customer registration
-router.post("/register", upload.single("brFile"), register);
+router.post(
+  "/register",
+  upload.single("business_registration_certification_path"),
+  register
+);
 
 export default router;

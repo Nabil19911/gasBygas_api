@@ -1,15 +1,11 @@
 import { Router } from "express";
 import roles from "../constant/roles.js";
-
-import {
-  createNewOutlet,
-  getAllOutlets,
-} from "../controllers/outlet.controller.js";
+import { getStock, updateStock } from "../controllers/stock.controller.js";
 import authenticate from "../middleware/auth.js";
 
 const router = Router();
 
-// get all outlets
+// get all Stock
 router.get(
   "/",
   authenticate([
@@ -18,10 +14,14 @@ router.get(
     roles.BRANCH_MANAGER,
     roles.DISPATCH_OFFICER,
   ]),
-  getAllOutlets
+  getStock
 );
 
-// create outlet
-router.post("/create/", authenticate([roles.ADMIN]), createNewOutlet);
+// update Stock
+router.put(
+  "/update/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
+  updateStock
+);
 
 export default router;

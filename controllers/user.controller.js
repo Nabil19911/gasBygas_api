@@ -55,14 +55,55 @@ export const getAllUsers = async (req, res) => {
  */
 export const createNewUser = async (req, res) => {
   try {
-    console.log(res.body);
-    // const customers = await Customer.find({}).select("-password");
+    const existingRecord = await User.findOne({ email });
 
-    // if (!customers) {
-    //   throw new Error("Customers are not found");
-    // }
+    if (existingRecord) {
+      throw new Error("Email already taken");
+    }
 
-    // res.status(200).send({ data: customers });
+    const saltRounds = 10;
+    const generatePassword = generateToken(10);
+    const hashedPassword = await bcrypt.hash(generatePassword, saltRounds);
+
+    const data = {
+      ...req.body,
+      password: hashedPassword,
+    };
+
+    const employee = await User(data);
+    const respond = await employee.save();
+
+    if (!employee) {
+      throw new Error("Employee is not created");
+    }
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const templatePath = path.join(
+      __dirname,
+      "..",
+      "emailTemplates",
+      "employeeRegister.ejs"
+    );
+    const emailHtml = await ejs.renderFile(templatePath, {
+      password: generatePassword,
+    });
+
+    const mailOptions = {
+      from: process.env.MY_EMAIL,
+      to: email,
+      subject: "Welcome to the Team!",
+      html: emailHtml,
+    };
+
+    const transporter = await mailer(mailOptions);
+
+    const emailRespond = await transporter.sendMail(mailOptions);
+
+    res
+      .status(201)
+      .send({ data: { password: generatePassword, respond, emailRespond } });
   } catch (error) {
     console.error("Error creating customers: ", error.message);
     res.status(400).send({ error: `Error: ${error.message}` });

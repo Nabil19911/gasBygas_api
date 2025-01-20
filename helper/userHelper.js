@@ -9,7 +9,7 @@ export const checkIfExists = async ({ field, value, errorMessage }) => {
   }
 };
 
-export const prepareCustomerData = ({ businessType, userDetails }) => {
+export const prepareUserData = ({ businessType, userDetails }) => {
   const commonData = {
     business_type: businessType,
     contact: userDetails.contact,
