@@ -1,6 +1,9 @@
-import { generateToken } from "../helper/generalHelper.js";
+import { generateToken, mailer } from "../helper/generalHelper.js";
 import Employee from "../models/employee.model.js";
 import bcrypt from "bcrypt";
+import ejs from "ejs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 /**
  * Get employee profile by username
@@ -78,16 +81,43 @@ export const createNewEmployee = async (req, res) => {
       email,
       contact,
       password: hashedPassword,
+      username: email,
     };
 
     const employee = await Employee(data);
     const respond = await employee.save();
 
     if (!employee) {
-      throw new Error("Outlet is not created");
+      throw new Error("Employee is not created");
     }
 
-    res.status(201).send({ data: { password: generatePassword, respond } });
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const templatePath = path.join(
+      __dirname,
+      "..",
+      "emailTemplates",
+      "employeeRegister.ejs"
+    );
+    const emailHtml = await ejs.renderFile(templatePath, {
+      password: generatePassword,
+    });
+
+    const mailOptions = {
+      from: process.env.MY_EMAIL,
+      to: email,
+      subject: "Welcome to the Team!",
+      html: emailHtml,
+    };
+
+    const transporter = await mailer(mailOptions);
+
+    const emailRespond = await transporter.sendMail(mailOptions);
+
+    res
+      .status(201)
+      .send({ data: { password: generatePassword, respond, emailRespond } });
   } catch (error) {
     console.error("Error fetching Employees: ", error.message);
     res.status(400).send({ error: `Error: ${error.message}` });

@@ -27,9 +27,13 @@ const OutletSchema = new Schema(
       type: String,
       required: true,
     },
-    // location: {
-    //   type: String,
-    //   required: true,
+    // is_request_enable: {
+    //   type: Boolean,
+    //   default: false,
+    //   required: false,
+    // },
+    // tokenThreshold: {
+
     // },
     full_address: {
       district: {
@@ -68,6 +72,11 @@ const OutletSchema = new Schema(
             required: true,
             min: 0,
           },
+          incomingStock:{
+            type: Number,
+            required: true,
+            min: 0,
+          }
         },
       ],
     },

@@ -7,10 +7,11 @@ import cors from "cors";
 import connectDB from "./config/database.js";
 import authRouter from "./routes/auth.route.js";
 import employeeRouter from "./routes/employee.route.js";
-import customerRouter from "./routes/customer.route.js";
 import userRouter from "./routes/user.route.js";
 import outletRouter from "./routes/outlet.route.js";
-import { createAdmin } from "./helper/employeeHelper.js";
+import stockRouter from "./routes/stock.route.js";
+import gasRequestRouter from "./routes/gasRquest.route.js";
+import { initializeAdminAndStock } from "./helper/employeeHelper.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -34,9 +35,10 @@ app.use(limiter);
 // Routes
 app.use("/auth", authRouter);
 app.use("/api/employee", employeeRouter);
-app.use("/api/customer", customerRouter);
 app.use("/api/user", userRouter);
 app.use("/api/outlet", outletRouter);
+app.use("/api/gas-request", gasRequestRouter);
+app.use("/api/stock", stockRouter);
 
 // Handle 404 (Route not found)
 app.use((req, res, next) => {
@@ -58,7 +60,7 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
   connectDB();
-  createAdmin();
+  initializeAdminAndStock();
 });
 
 export default app;

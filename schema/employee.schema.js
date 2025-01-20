@@ -2,6 +2,7 @@ import { Schema } from "mongoose";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
 import activeStatus from "../constant/activeStatus.js";
+import { type } from "os";
 
 const EmployeeSchema = new Schema(
   {
@@ -13,6 +14,10 @@ const EmployeeSchema = new Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: Object.values(activeStatus),
@@ -20,7 +25,15 @@ const EmployeeSchema = new Schema(
     },
     contact: {
       type: String,
-      required: true
+      required: function () {
+        return this.role !== roles.ADMIN;
+      },
+      validate: {
+        validator: function (value) {
+          return this.role === roles.ADMIN || value; // Email must exist unless admin
+        },
+        message: "Contact is required.",
+      },
     },
     email: {
       type: String,
@@ -38,6 +51,10 @@ const EmployeeSchema = new Schema(
     password: {
       type: String,
       required: true,
+    },
+    is_temp_password_changed: {
+      type: Boolean,
+      default: false,
     },
     role: {
       type: String,
