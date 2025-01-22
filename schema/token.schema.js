@@ -15,6 +15,7 @@ const tokenSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: Object.values(requestStatus),
+      default: requestStatus.PENDING,
       required: true,
     },
   },

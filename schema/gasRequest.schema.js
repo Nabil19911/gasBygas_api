@@ -12,14 +12,22 @@ const GasRequestSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.User,
+      required: true,
     },
     outletId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Outlet,
+      required: true,
     },
     tokenId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Token,
+      required: false,
+    },
+    scheduleId: {
+      type: Schema.Types.ObjectId,
+      ref: schemaModels.Schedule,
+      required: true,
     },
     gas: {
       individual: {
@@ -33,6 +41,17 @@ const GasRequestSchema = new Schema(
           enum: Object.values(gasRequestType),
           default: gasRequestType.New_Gas,
           required: true,
+        },
+        cylinder: {
+          returned: {
+            type: Boolean,
+            required: false,
+            default: false,
+          },
+          cylinderQuantity: {
+            type: Number,
+            required: false,
+          },
         },
         gasQuantity: {
           type: Number,
@@ -56,6 +75,17 @@ const GasRequestSchema = new Schema(
             default: gasRequestType.New_Gas,
             required: true,
           },
+          cylinder: {
+            returned: {
+              type: Boolean,
+              required: false,
+              default: false,
+            },
+            cylinderQuantity: {
+              type: Number,
+              required: false,
+            },
+          },
           gasQuantity: {
             type: Number,
             required: true,
@@ -71,6 +101,7 @@ const GasRequestSchema = new Schema(
       status: {
         type: String,
         enum: Object.values(paymentStatus),
+        default: paymentStatus.PENDING,
         required: true,
       },
       totalAmount: {
@@ -86,11 +117,6 @@ const GasRequestSchema = new Schema(
         type: Date,
         required: true,
       },
-    },
-    is_cylinder_returned: {
-      type: Boolean,
-      required: false,
-      default: false,
     },
 
     outletManagerApproval: {
@@ -117,11 +143,6 @@ const GasRequestSchema = new Schema(
       type: String,
       required: false,
     },
-    scheduleId: {
-      type: Schema.Types.ObjectId,
-      ref: schemaModels.Schedule,
-    },
-
     createdBy: {
       type: {
         type: String,

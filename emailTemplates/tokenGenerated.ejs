@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gas Token Request</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f9ff;
+        color: #333333;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px;
+        text-align: center;
+      }
+      .content p {
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .content strong {
+        color: #007bff;
+      }
+      .button {
+        display: inline-block;
+        margin: 20px auto;
+        background-color: #0056b3;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .footer {
+        background-color: #007bff;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Your Gas Token Request</h1>
+      </div>
+      <div class="content">
+        <p>Thank you for your request!</p>
+        <p>Here is your requested gas token:</p>
+        <p><strong><%= gasToken %></strong></p>
+        <p>If you have any questions, feel free to contact us at any time.</p>
+      </div>
+      <div class="footer">
+        <p>Best regards,</p>
+        <p>The Gas Token Team</p>
+      </div>
+    </div>
+  </body>
+</html>
