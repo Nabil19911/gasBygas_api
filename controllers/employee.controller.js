@@ -112,7 +112,6 @@ export const createNewEmployee = async (req, res) => {
     };
 
     const transporter = await mailer(mailOptions);
-
     const emailRespond = await transporter.sendMail(mailOptions);
 
     res

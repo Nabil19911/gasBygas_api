@@ -11,6 +11,8 @@ export const getUserProfile = async (req, res) => {
   try {
     const customer = await User.findOne({ email }).select("-password");
 
+    // TODO: find the gas requested user
+
     if (!customer) {
       throw new Error("User not found");
     }
