@@ -1,15 +1,21 @@
 import { Schema } from "mongoose";
-import schemaModels from "../constant/schemaModels";
+import deliveryStatus from "../constant/deliveryStatus.js";
+import { gasType } from "../constant/gasTypes.js";
+import schemaModels from "../constant/schemaModels.js";
 
 const ScheduledSchema = new Schema(
   {
     status: {
       type: String,
-      enum: Object.values(requestStatus),
+      enum: Object.values(deliveryStatus),
       required: false,
     },
     deliveryDate: {
       type: Date,
+      required: false,
+    },
+    comment: {
+      type: String,
       required: false,
     },
     outlets: [
@@ -40,4 +46,3 @@ const ScheduledSchema = new Schema(
 );
 
 export default ScheduledSchema;
-

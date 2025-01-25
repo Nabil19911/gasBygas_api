@@ -8,6 +8,15 @@ import Outlet from "../models/outlet.model.js";
 export const createNewOutlet = async (req, res) => {
   try {
     const data = req.body;
+    const existingOutletByEmail = await Outlet.findOne({ email: data.email });
+    const existingOutletByBranchCode = await Outlet.findOne({
+      branch_code: data.branch_code,
+    });
+
+    if (existingOutletByEmail || existingOutletByBranchCode) {
+      throw new Error("Outlet is already exist with same email or branch code");
+    }
+
     const outlet = await Outlet(data);
     const respond = await outlet.save();
 
@@ -18,7 +27,7 @@ export const createNewOutlet = async (req, res) => {
     res.status(201).send({ data: respond });
   } catch (error) {
     console.error("Error fetching Employees: ", error.message);
-    res.status(400).send({ error: `Error: ${error.message}` });
+    res.status(400).send({ message: `Error: ${error.message}` });
   }
 };
 
@@ -38,6 +47,6 @@ export const getAllOutlets = async (req, res) => {
     res.status(200).send({ data: outlets });
   } catch (error) {
     console.error("Error fetching customers: ", error.message);
-    res.status(400).send({ error: `Error: ${error.message}` });
+    res.status(400).send({ message: `Error: ${error.message}` });
   }
 };

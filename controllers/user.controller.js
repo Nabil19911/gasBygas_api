@@ -26,7 +26,25 @@ export const getUserProfile = async (req, res) => {
     res.status(200).send({ data: organizationData });
   } catch (error) {
     console.error("Error fetching user profile: ", error.message);
-    res.status(400).send({ error: `Error: ${error.message}` });
+    res.status(400).send({ message: `Error: ${error.message}` });
+  }
+};
+
+/**
+ * Get user profile by email
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const customer = await User.findById(id).select("-password");
+
+    res.status(200).send({ data: customer });
+  } catch (error) {
+    console.error("Error fetching user profile: ", error.message);
+    res.status(400).send({ message: `Error: ${error.message}` });
   }
 };
 
@@ -46,7 +64,7 @@ export const getAllUsers = async (req, res) => {
     res.status(200).send({ data: customers });
   } catch (error) {
     console.error("Error fetching customers: ", error.message);
-    res.status(400).send({ error: `Error: ${error.message}` });
+    res.status(400).send({ message: `Error: ${error.message}` });
   }
 };
 
@@ -108,6 +126,6 @@ export const createNewUser = async (req, res) => {
       .send({ data: { password: generatePassword, respond, emailRespond } });
   } catch (error) {
     console.error("Error creating customers: ", error.message);
-    res.status(400).send({ error: `Error: ${error.message}` });
+    res.status(400).send({ message: `Error: ${error.message}` });
   }
 };

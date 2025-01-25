@@ -3,14 +3,18 @@ import roles from "../constant/roles.js";
 import {
   createNewUser,
   getAllUsers,
+  getUserById,
   getUserProfile,
 } from "../controllers/user.controller.js";
 import authenticate from "../middleware/auth.js";
 
 const router = Router();
 
-// Example resource route
+// Get all user
 router.get("/", authenticate([roles.ADMIN]), getAllUsers);
+
+// get user by id
+router.get("/:id", authenticate([roles.ADMIN]), getUserById);
 
 // Get customer profile route
 router.post(
