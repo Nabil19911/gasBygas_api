@@ -22,25 +22,25 @@ const GasRequestSchema = new Schema(
     tokenId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Token,
-      required: false,
+      required: true,
     },
     scheduleId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Schedule,
-      required: true,
+      required: false,
     },
     gas: {
       individual: {
         type: {
           type: String,
           enum: Object.values(gasType),
-          required: true,
+          required: false,
         },
         requestType: {
           type: String,
           enum: Object.values(gasRequestType),
           default: gasRequestType.New_Gas,
-          required: true,
+          required: false,
         },
         cylinder: {
           returned: {
@@ -55,7 +55,7 @@ const GasRequestSchema = new Schema(
         },
         gasQuantity: {
           type: Number,
-          required: true,
+          required: false,
         },
         comments: {
           type: String,
@@ -67,13 +67,13 @@ const GasRequestSchema = new Schema(
           type: {
             type: String,
             enum: Object.values(gasType),
-            required: true,
+            required: false,
           },
           requestType: {
             type: String,
             enum: Object.values(gasRequestType),
             default: gasRequestType.New_Gas,
-            required: true,
+            required: false,
           },
           cylinder: {
             returned: {
@@ -88,7 +88,7 @@ const GasRequestSchema = new Schema(
           },
           gasQuantity: {
             type: Number,
-            required: true,
+            required: false,
           },
           comments: {
             type: String,
@@ -102,20 +102,20 @@ const GasRequestSchema = new Schema(
         type: String,
         enum: Object.values(paymentStatus),
         default: paymentStatus.PENDING,
-        required: true,
+        required: false,
       },
       totalAmount: {
         type: Number,
-        required: true,
+        required: false,
       },
       method: {
         type: String,
         enum: Object.values(paymentMethod),
-        required: true,
+        required: false,
       },
       paymentDate: {
         type: Date,
-        required: true,
+        required: false,
       },
     },
 

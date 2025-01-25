@@ -119,6 +119,6 @@ export const createNewEmployee = async (req, res) => {
       .send({ data: { password: generatePassword, respond, emailRespond } });
   } catch (error) {
     console.error("Error fetching Employees: ", error.message);
-    res.status(400).send({ error: `Error: ${error.message}` });
+    res.status(400).send({ message: `Error: ${error.message}` });
   }
 };

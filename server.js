@@ -11,7 +11,10 @@ import userRouter from "./routes/user.route.js";
 import outletRouter from "./routes/outlet.route.js";
 import stockRouter from "./routes/stock.route.js";
 import gasRequestRouter from "./routes/gasRquest.route.js";
-import { initializeAdminAndStock } from "./helper/employeeHelper.js";
+import scheduleRouter from "./routes/schedule.route.js";
+import { initializeAdmin, initializeStock } from "./helper/employeeHelper.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +42,13 @@ app.use("/api/user", userRouter);
 app.use("/api/outlet", outletRouter);
 app.use("/api/gas-request", gasRequestRouter);
 app.use("/api/stock", stockRouter);
+app.use("/api/schedule", scheduleRouter);
+
+
+// Get the current directory path using import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
 // Handle 404 (Route not found)
 app.use((req, res, next) => {
@@ -60,7 +70,8 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
   connectDB();
-  initializeAdminAndStock();
+  initializeAdmin();
+  initializeStock();
 });
 
 export default app;
