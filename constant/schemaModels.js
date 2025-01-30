@@ -7,6 +7,7 @@ const schemaModels = {
   Token: "Token",
   Stock: "Stock",
   Schedule: "Schedule",
+  OutletGasRequest: "OutletGasRequest",
 };
 
 export default schemaModels;

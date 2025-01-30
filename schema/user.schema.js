@@ -3,6 +3,7 @@ import roles from "../constant/roles.js";
 import activeStatus from "../constant/activeStatus.js";
 import businessTypeConstant from "../constant/businessType.js";
 import requestStatus from "../constant/requestStatus.js";
+import districts from "../constant/districts.js";
 
 const UserSchema = new Schema(
   {
@@ -31,6 +32,7 @@ const UserSchema = new Schema(
     full_address: {
       district: {
         type: String,
+        enum: Object.values(districts),
         required: true,
       },
       post_code: {
@@ -71,6 +73,7 @@ const UserSchema = new Schema(
         required: function () {
           return this.business_type === businessTypeConstant.Individual;
         },
+        unique: true,
       },
     },
     business_registration_certification_path: {
@@ -85,6 +88,7 @@ const UserSchema = new Schema(
         required: function () {
           return this.business_type === businessTypeConstant.Organization;
         },
+        unique: true,
       },
       business_name: {
         type: String,

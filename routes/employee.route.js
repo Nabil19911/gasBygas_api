@@ -3,6 +3,7 @@ import roles from "../constant/roles.js";
 import {
   createNewEmployee,
   getAllEmployees,
+  getEmployeeByEmail,
   getEmployeeProfile,
 } from "../controllers/employee.controller.js";
 import authenticate from "../middleware/auth.js";
@@ -11,6 +12,9 @@ const router = Router();
 
 // Default route
 router.get("/", authenticate(roles.ADMIN), getAllEmployees);
+
+// Default route
+router.post("/", authenticate(roles.ADMIN), getEmployeeByEmail);
 
 // Get Employee Profile
 router.post(

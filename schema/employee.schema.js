@@ -2,7 +2,6 @@ import { Schema } from "mongoose";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
 import activeStatus from "../constant/activeStatus.js";
-import { type } from "os";
 
 const EmployeeSchema = new Schema(
   {

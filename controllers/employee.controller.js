@@ -1,9 +1,9 @@
-import { generateToken, mailer } from "../helper/generalHelper.js";
-import Employee from "../models/employee.model.js";
 import bcrypt from "bcrypt";
 import ejs from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { generateToken, mailer } from "../helper/generalHelper.js";
+import Employee from "../models/employee.model.js";
 
 /**
  * Get employee profile by username
@@ -15,7 +15,7 @@ export const getEmployeeProfile = async (req, res) => {
 
   try {
     // Fetch the employee by username
-    const employee = await Employee.findOne({ username });
+    const employee = await Employee.findOne({ username }).populate("outlet");
     if (!employee) {
       throw new Error("Employee not found");
     }
@@ -25,6 +25,7 @@ export const getEmployeeProfile = async (req, res) => {
       last_name: employee.last_name,
       username: employee.username,
       role: employee.role,
+      outlet: employee.outlet,
     };
 
     res.status(200).send({ data: userData });
@@ -55,13 +56,35 @@ export const getAllEmployees = async (req, res) => {
 };
 
 /**
+ * Get Employee by email
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getEmployeeByEmail = async (req, res) => {
+  try {
+    const email = req.body;
+    const employees = await Employee.find(email).select("-password");
+
+    if (!employees) {
+      throw new Error("Employee is not found");
+    }
+
+    res.status(200).send({ data: employees });
+  } catch (error) {
+    console.error("Error fetching Employees: ", error.message);
+    res.status(400).send({ error: `Error: ${error.message}` });
+  }
+};
+
+/**
  * Get create new Employee
  * @param {Request} req
  * @param {Response} res
  */
 export const createNewEmployee = async (req, res) => {
   try {
-    const { first_name, last_name, role, status, email, contact } = req.body;
+    const { first_name, last_name, role, status, email, contact, outlet } =
+      req.body;
 
     const existingRecord = await Employee.findOne({ email });
 
@@ -80,6 +103,7 @@ export const createNewEmployee = async (req, res) => {
       status,
       email,
       contact,
+      outlet,
       password: hashedPassword,
       username: email,
     };
