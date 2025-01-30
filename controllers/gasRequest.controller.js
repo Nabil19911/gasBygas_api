@@ -21,8 +21,6 @@ export const getGasRequest = async (req, res) => {
     if (outletId !== "undefined") filter.outletId = outletId;
     if (tokenId !== "undefined") filter.tokenId = tokenId;
 
-    console.log("Filter object:", filter); // Log the filter to debug
-
     const respond = await GasRequest.find(filter)
       .populate("userId")
       .populate("outletId")

@@ -10,6 +10,12 @@ const OutletGasRequestSchema = new Schema(
     scheduleId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Schedule,
+      required: true,
+    },
+    outletId: {
+      type: Schema.Types.ObjectId,
+      ref: schemaModels.Outlet,
+      required: true,
     },
     status: {
       type: String,
@@ -22,6 +28,7 @@ const OutletGasRequestSchema = new Schema(
         type: String,
         enum: Object.values(requestStatus),
         required: false,
+        default: requestStatus.PENDING
       },
       approvedBy: {
         type: String,
@@ -61,12 +68,6 @@ const OutletGasRequestSchema = new Schema(
         type: {
           type: String,
           enum: Object.values(gasType),
-          required: false,
-        },
-        requestType: {
-          type: String,
-          enum: Object.values(gasRequestType),
-          default: gasRequestType.New_Gas,
           required: false,
         },
         cylinder: {
