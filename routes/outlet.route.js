@@ -3,6 +3,7 @@ import roles from "../constant/roles.js";
 
 import {
   createNewOutlet,
+  getAllOutletGasRequests,
   getAllOutlets,
   getOutletGasRequests,
   requestGas,
@@ -27,6 +28,12 @@ router.get(
 router.post("/create/", authenticate([roles.ADMIN]), createNewOutlet);
 
 router.post("/gas-request/", authenticate([roles.BRANCH_MANAGER]), requestGas);
+
+router.get(
+  "/gas-request/",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
+  getAllOutletGasRequests
+);
 
 router.get(
   "/gas-request/:id",

@@ -82,15 +82,39 @@ export const requestGas = async (req, res) => {
 export const getOutletGasRequests = async (req, res) => {
   try {
     const { id } = req.params;
-    const gasRequest = await OutletGasRequest.find({ outletId: id }).populate('scheduleId');
+    const gasRequest = await OutletGasRequest.find({ outletId: id }).populate(
+      "scheduleId"
+    );
 
     if (!gasRequest) {
-      throw new Error("Customers are not found");
+      throw new Error("gas request are not found");
     }
 
     res.status(200).send({ data: gasRequest });
   } catch (error) {
-    console.error("Error fetching customers: ", error.message);
+    console.error("Error fetching gas: ", error.message);
+    res.status(400).send({ message: `Error: ${error.message}` });
+  }
+};
+
+/**
+ * get all request gas
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getAllOutletGasRequests = async (req, res) => {
+  try {
+    const gasRequest = await OutletGasRequest.find()
+      .populate("scheduleId")
+      .populate("outletId");
+
+    if (!gasRequest) {
+      throw new Error("gas request are not found");
+    }
+
+    res.status(200).send({ data: gasRequest });
+  } catch (error) {
+    console.error("Error fetching gas: ", error.message);
     res.status(400).send({ message: `Error: ${error.message}` });
   }
 };

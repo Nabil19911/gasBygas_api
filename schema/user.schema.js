@@ -48,7 +48,6 @@ const UserSchema = new Schema(
       type: String,
       enum: Object.values(activeStatus),
       default: activeStatus.ACTIVE,
-      required: false,
     },
     created_by: {
       type: String,
@@ -70,10 +69,11 @@ const UserSchema = new Schema(
       },
       nic: {
         type: String,
+        unique: true,
+        sparse: true,
         required: function () {
           return this.business_type === businessTypeConstant.Individual;
         },
-        unique: true,
       },
     },
     business_registration_certification_path: {
@@ -88,7 +88,6 @@ const UserSchema = new Schema(
         required: function () {
           return this.business_type === businessTypeConstant.Organization;
         },
-        unique: true,
       },
       business_name: {
         type: String,
@@ -103,7 +102,6 @@ const UserSchema = new Schema(
       },
       approval_date: {
         type: Date,
-        required: false,
       },
     },
   },

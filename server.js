@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 20 requests per window
+  max: 1000, // limit each IP to 20 requests per window
 });
 
 const corsOptions = {

@@ -6,9 +6,10 @@ import { fileURLToPath } from "url";
 import ejs from "ejs";
 import path from "path";
 import User from "../models/user.model.js";
+import OutletGasRequest from "../models/outletGasRequest.model.js";
 
 /**
- * Create new user
+ * get Gas Requets
  * @param {Request} req
  * @param {Response} res
  */
@@ -38,7 +39,56 @@ export const getGasRequest = async (req, res) => {
 };
 
 /**
- * Create new user
+ * get Gas Requets
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getOutletGasRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const respond = await OutletGasRequest.findById(id)
+      .populate("scheduleId")
+      .populate("outletId");
+
+    if (!respond || respond.length === 0) {
+      console.log("No records found for the given filter.");
+    }
+
+    res.status(200).send({ data: respond });
+  } catch (error) {
+    console.error("Error fetching schedules:", error);
+    res.status(500).send({ message: "Error fetching schedules" });
+  }
+};
+
+/**
+ * get Gas Requets
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const patchOutletGasRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const respond = await OutletGasRequest.findByIdAndUpdate(id, data, {
+      new: true,
+    });
+
+    if (!respond) {
+      throw new Error("update head office approval failed");
+    }
+
+    res.status(200).send({ data: respond });
+  } catch (error) {
+    console.error("Error fetching schedules:", error);
+    res.status(500).send({ message: "Error fetching schedules" });
+  }
+};
+
+/**
+ * Create new gas request
  * @param {Request} req
  * @param {Response} res
  */

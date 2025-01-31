@@ -3,6 +3,8 @@ import roles from "../constant/roles.js";
 import {
   createNewGasRequest,
   getGasRequest,
+  getOutletGasRequest,
+  patchOutletGasRequest,
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -17,6 +19,18 @@ router.get(
     roles.CUSTOMER,
   ]),
   getGasRequest
+);
+
+router.get(
+  "/outlet/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
+  getOutletGasRequest
+);
+
+router.patch(
+  "/outlet/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
+  patchOutletGasRequest
 );
 
 router.post(
