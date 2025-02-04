@@ -27,8 +27,8 @@ export const createNewOutlet = async (req, res) => {
 
     res.status(201).send({ data: respond });
   } catch (error) {
-    console.error("Error fetching Employees: ", error.message);
-    res.status(400).send({ message: `Error: ${error.message}` });
+    console.error("Error creating new outlet: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
 
@@ -47,19 +47,20 @@ export const getAllOutlets = async (req, res) => {
 
     res.status(200).send({ data: outlets });
   } catch (error) {
-    console.error("Error fetching Outlets: ", error.message);
-    res.status(400).send({ message: ` ${error.message}` });
+    console.error("Error fetching all Outlets: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
 
 /**
- * Get All outlets
+ * Get outlet by id
  * @param {Request} req
  * @param {Response} res
  */
 export const getOutletById = async (req, res) => {
   try {
     const { id } = req.params;
+
     const outlet = await Outlet.findById(id);
 
     if (!outlet) {
@@ -68,8 +69,8 @@ export const getOutletById = async (req, res) => {
 
     res.status(200).send({ data: outlet });
   } catch (error) {
-    console.error("Error fetching Outlet: ", error.message);
-    res.status(400).send({ message: ` ${error.message}` });
+    console.error("Error fetching Outlet by id: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
 
@@ -89,35 +90,35 @@ export const patchOutlet = async (req, res) => {
 
     res.status(200).send({ data: outlets });
   } catch (error) {
-    console.error("Error fetching Outlet: ", error.message);
-    res.status(400).send({ message: `${error.message}` });
+    console.error("Error patching Outlet: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
 
 /**
- * request gas
+ * request new gas
  * @param {Request} req
  * @param {Response} res
  */
-export const requestGas = async (req, res) => {
+export const requestNewGas = async (req, res) => {
   try {
     const data = req.body;
     const gasRequest = await OutletGasRequest(data);
     await gasRequest.save();
 
     if (!gasRequest) {
-      throw new Error("Customers are not found");
+      throw new Error("gas request is not made");
     }
 
     res.status(200).send({ data: gasRequest });
   } catch (error) {
-    console.error("Error fetching customers: ", error.message);
-    res.status(400).send({ message: `Error: ${error.message}` });
+    console.error("Error creating new gas request: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
 
 /**
- * get request gas
+ * get outlet gas requests by id
  * @param {Request} req
  * @param {Response} res
  */
@@ -129,13 +130,13 @@ export const getOutletGasRequests = async (req, res) => {
     );
 
     if (!gasRequest) {
-      throw new Error("gas request are not found");
+      throw new Error("gas request is not found");
     }
 
     res.status(200).send({ data: gasRequest });
   } catch (error) {
-    console.error("Error fetching gas: ", error.message);
-    res.status(400).send({ message: `Error: ${error.message}` });
+    console.error("Error fetching outlet gas requests by id: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
 
@@ -151,12 +152,12 @@ export const getAllOutletGasRequests = async (req, res) => {
       .populate("outletId");
 
     if (!gasRequest) {
-      throw new Error("gas request are not found");
+      throw new Error("gas requests are not found");
     }
 
     res.status(200).send({ data: gasRequest });
   } catch (error) {
-    console.error("Error fetching gas: ", error.message);
-    res.status(400).send({ message: `Error: ${error.message}` });
+    console.error("Error fetching all gas requests: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
