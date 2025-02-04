@@ -42,13 +42,55 @@ export const getAllOutlets = async (req, res) => {
     const outlets = await Outlet.find();
 
     if (!outlets) {
-      throw new Error("Customers are not found");
+      throw new Error("Outlets are not found");
     }
 
     res.status(200).send({ data: outlets });
   } catch (error) {
-    console.error("Error fetching customers: ", error.message);
-    res.status(400).send({ message: `Error: ${error.message}` });
+    console.error("Error fetching Outlets: ", error.message);
+    res.status(400).send({ message: ` ${error.message}` });
+  }
+};
+
+/**
+ * Get All outlets
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getOutletById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const outlet = await Outlet.findById(id);
+
+    if (!outlet) {
+      throw new Error("Outlet is not found");
+    }
+
+    res.status(200).send({ data: outlet });
+  } catch (error) {
+    console.error("Error fetching Outlet: ", error.message);
+    res.status(400).send({ message: ` ${error.message}` });
+  }
+};
+
+/**
+ * patch outlets
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const patchOutlet = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+    const outlets = await Outlet.findByIdAndUpdate(id, data, { new: true });
+    if (!outlets) {
+      throw new Error("Outlet didn't updated");
+    }
+
+    res.status(200).send({ data: outlets });
+  } catch (error) {
+    console.error("Error fetching Outlet: ", error.message);
+    res.status(400).send({ message: `${error.message}` });
   }
 };
 

@@ -1,12 +1,12 @@
-import requestStatus from "../constant/requestStatus.js";
-import { generateToken, mailer } from "../helper/generalHelper.js";
-import GasRequest from "../models/gasRequet.model.js";
-import Token from "../models/token.model.js";
-import { fileURLToPath } from "url";
 import ejs from "ejs";
 import path from "path";
-import User from "../models/user.model.js";
+import { fileURLToPath } from "url";
+import activeStatus from "../constant/activeStatus.js";
+import { generateToken, mailer } from "../helper/generalHelper.js";
+import GasRequest from "../models/gasRequet.model.js";
 import OutletGasRequest from "../models/outletGasRequest.model.js";
+import Token from "../models/token.model.js";
+import User from "../models/user.model.js";
 
 /**
  * get Gas Requets
@@ -25,7 +25,8 @@ export const getGasRequest = async (req, res) => {
     const respond = await GasRequest.find(filter)
       .populate("userId")
       .populate("outletId")
-      .populate("tokenId");
+      .populate("tokenId")
+      .populate("scheduleId");
 
     if (!respond || respond.length === 0) {
       console.log("No records found for the given filter.");
@@ -102,7 +103,7 @@ export const createNewGasRequest = async (req, res) => {
     const token = await Token({
       token: generateGasToken,
       expiryDate: currentDate,
-      status: requestStatus.PENDING,
+      status: activeStatus.PENDING,
     });
     const tokenResponse = await token.save();
 

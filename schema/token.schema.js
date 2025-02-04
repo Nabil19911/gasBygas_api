@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import requestStatus from "../constant/requestStatus.js";
+import activeStatus from "../constant/activeStatus.js";
 
 const tokenSchema = new mongoose.Schema(
   {
@@ -14,8 +15,8 @@ const tokenSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: Object.values(requestStatus),
-      default: requestStatus.PENDING,
+      enum: Object.values(activeStatus),
+      default: activeStatus.ACTIVE,
       required: true,
     },
   },

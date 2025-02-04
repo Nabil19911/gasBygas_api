@@ -29,6 +29,10 @@ const OutletSchema = new Schema(
       required: true,
     },
     gas_request: {
+      active_until: {
+        type: Date,
+        required: false,
+      },
       is_allowed: {
         type: Boolean,
         required: false,

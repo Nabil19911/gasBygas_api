@@ -1,3 +1,4 @@
+import GasRequest from "../models/gasRequet.model.js";
 import Token from "../models/token.model.js";
 
 /**
@@ -11,6 +12,10 @@ export const checkTokenValidation = async (req, res) => {
   try {
     const tokenRes = await Token.findOne({ token });
 
+    const gasRequestRes = await GasRequest.findOne({
+      tokenId: tokenRes._id,
+    }).populate("tokenId");
+
     if (!tokenRes) {
       throw new Error("Token not found");
     }
@@ -19,7 +24,7 @@ export const checkTokenValidation = async (req, res) => {
       throw new Error("Token is expired");
     }
 
-    res.status(200).send({ data: tokenRes });
+    res.status(200).send({ data: gasRequestRes });
   } catch (error) {
     console.error("Error fetching Token: ", error.message);
     res.status(400).send({ message: error.message });
