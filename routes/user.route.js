@@ -23,7 +23,7 @@ router.get("/:id", authenticate([roles.ADMIN]), getUserById);
 router.patch("/:id", authenticate([roles.ADMIN]), updateUserById);
 
 // Default route
-router.post("/", authenticate(roles.ADMIN), getUserByEmail);
+router.post("/", authenticate([roles.ADMIN, roles.BRANCH_MANAGER]), getUserByEmail);
 
 // Get customer profile route
 router.post(
