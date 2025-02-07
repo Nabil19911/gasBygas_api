@@ -1,9 +1,13 @@
 import { Router } from "express";
 import roles from "../constant/roles.js";
 import {
-  createNewGasRequest,
+  createIndividualGasRequest,
+  createOrganizationGasRequest,
   getGasRequest,
+  getOrganizationGasRequest,
+  getOrganizationGasRequestById,
   getOutletGasRequest,
+  patchOrganizationGasRequest,
   patchOutletGasRequest,
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
@@ -11,7 +15,7 @@ import authenticate from "../middleware/auth.js";
 const router = Router();
 
 router.get(
-  "/",
+  "/individual/",
   authenticate([
     roles.ADMIN,
     roles.DISPATCH_OFFICER,
@@ -19,6 +23,17 @@ router.get(
     roles.CUSTOMER,
   ]),
   getGasRequest
+);
+
+router.get(
+  "/organization/",
+  authenticate([
+    roles.ADMIN,
+    roles.DISPATCH_OFFICER,
+    roles.BRANCH_MANAGER,
+    roles.CUSTOMER,
+  ]),
+  getOrganizationGasRequest
 );
 
 router.get(
@@ -33,10 +48,28 @@ router.patch(
   patchOutletGasRequest
 );
 
+router.get(
+  "/organization/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
+  getOrganizationGasRequestById
+);
+
+router.patch(
+  "/organization/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
+  patchOrganizationGasRequest
+);
+
 router.post(
-  "/create/",
+  "/individual/",
   authenticate([roles.ADMIN, roles.BRANCH_MANAGER, roles.CUSTOMER]),
-  createNewGasRequest
+  createIndividualGasRequest
+);
+
+router.post(
+  "/organization/",
+  authenticate([roles.ADMIN, roles.BRANCH_MANAGER, roles.CUSTOMER]),
+  createOrganizationGasRequest
 );
 
 export default router;

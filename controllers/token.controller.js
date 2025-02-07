@@ -1,4 +1,4 @@
-import GasRequest from "../models/gasRequet.model.js";
+import IndividualGasRequest from "../models/individualgasRequet.model.js";
 import Token from "../models/token.model.js";
 
 /**
@@ -12,7 +12,7 @@ export const checkTokenValidation = async (req, res) => {
   try {
     const tokenRes = await Token.findOne({ token });
 
-    const gasRequestRes = await GasRequest.findOne({
+    const gasRequestRes = await IndividualGasRequest.findOne({
       tokenId: tokenRes._id,
     }).populate("tokenId");
 

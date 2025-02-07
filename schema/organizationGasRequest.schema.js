@@ -7,30 +7,26 @@ import requestStatus from "../constant/requestStatus.js";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
 
-const GasRequestSchema = new Schema(
+const OrganizationGasRequestSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.User,
       required: true,
     },
-    outletId: {
-      type: Schema.Types.ObjectId,
-      ref: schemaModels.Outlet,
-      required: true,
-    },
     tokenId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Token,
-      required: true,
+      required: false,
     },
-    scheduleId: {
-      type: Schema.Types.ObjectId,
-      ref: schemaModels.Schedule,
-      required: true,
+
+    deliveryDate: {
+      type: Date,
+      required: false,
     },
-    gas: {
-      individual: {
+
+    gas: [
+      {
         type: {
           type: String,
           enum: Object.values(gasType),
@@ -51,47 +47,12 @@ const GasRequestSchema = new Schema(
           type: Number,
           required: false,
         },
-        reallocateGasRequest: {
-          is_reallocated: {
-            type: Boolean,
-            required: false,
-          },
-          toSheduleId: {
-            type: Schema.Types.ObjectId,
-            ref: schemaModels.Schedule,
-            required: false,
-          },
-          comments: {
-            type: String,
-            required: false,
-          },
+        approvedQuantity: {
+          type: Number,
+          required: false,
         },
       },
-      organization: [
-        {
-          type: {
-            type: String,
-            enum: Object.values(gasType),
-            required: false,
-          },
-          requestType: {
-            type: String,
-            enum: Object.values(gasRequestType),
-            default: gasRequestType.New_Gas,
-            required: false,
-          },
-          isCylinderReturned: {
-            type: Boolean,
-            required: false,
-            default: false,
-          },
-          gasQuantity: {
-            type: Number,
-            required: false,
-          },
-        },
-      ],
-    },
+    ],
 
     payment: {
       status: {
@@ -119,6 +80,7 @@ const GasRequestSchema = new Schema(
       status: {
         type: String,
         enum: Object.values(requestStatus),
+        default: requestStatus.PENDING,
         required: false,
       },
       approvedBy: {
@@ -129,32 +91,13 @@ const GasRequestSchema = new Schema(
         type: Date,
         required: false,
       },
-      approvedGas: [
-        {
-          type: {
-            type: String,
-            enum: Object.values(gasType),
-            required: false,
-          },
-          requestType: {
-            type: String,
-            enum: Object.values(gasRequestType),
-            default: gasRequestType.New_Gas,
-            required: false,
-          },
-          gasQuantity: {
-            type: Number,
-            required: false,
-          },
-        },
-      ],
       comment: {
         type: String,
         required: false,
       },
     },
 
-    comments: {
+    comment: {
       type: String,
       required: false,
     },
@@ -170,4 +113,4 @@ const GasRequestSchema = new Schema(
   }
 );
 
-export default GasRequestSchema;
+export default OrganizationGasRequestSchema;
