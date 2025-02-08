@@ -1,10 +1,11 @@
 import { Router } from "express";
 import roles from "../constant/roles.js";
 import {
-    createNewEmployee,
-    getAllEmployees,
-    getEmployeeByEmail,
-    getEmployeeProfile,
+  createNewEmployee,
+  getAllEmployees,
+  getEmployeeByEmail,
+  getEmployeeProfile,
+  updateEmployeeById
 } from "../controllers/employee.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -19,8 +20,25 @@ router.post("/", authenticate(roles.ADMIN), getEmployeeByEmail);
 // Get Employee Profile
 router.post(
   "/profile/",
-  authenticate([roles.ADMIN, roles.BRANCH_MANAGER, roles.DISPATCH_OFFICER]),
+  authenticate([
+    roles.ADMIN,
+    roles.BRANCH_MANAGER,
+    roles.DISPATCH_OFFICER,
+    roles.DELIVERY_OFFICER,
+  ]),
   getEmployeeProfile
+);
+
+// Patch Employee Profile
+router.patch(
+  "/profile/:id",
+  authenticate([
+    roles.ADMIN,
+    roles.BRANCH_MANAGER,
+    roles.DISPATCH_OFFICER,
+    roles.DELIVERY_OFFICER,
+  ]),
+  updateEmployeeById
 );
 
 // Get Employee Profile

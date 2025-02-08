@@ -12,6 +12,10 @@ export const checkTokenValidation = async (req, res) => {
   try {
     const tokenRes = await Token.findOne({ token });
 
+    if (!tokenRes) {
+      throw new Error("Invalid Token");
+    }
+
     const gasRequestRes = await IndividualGasRequest.findOne({
       tokenId: tokenRes._id,
     }).populate("tokenId");

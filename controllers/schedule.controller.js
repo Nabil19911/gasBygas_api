@@ -70,6 +70,8 @@ export const updateScheduleById = async (req, res) => {
     const updateData = req.body;
     const { id } = req.params;
 
+    console.log({updateData});
+
     const schedule = await Scheduled.findByIdAndUpdate(id, updateData);
     const respond = await schedule.save();
 

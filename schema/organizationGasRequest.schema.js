@@ -1,5 +1,4 @@
 import { Schema } from "mongoose";
-import { gasRequestType } from "../constant/gasRequestType.js";
 import { gasType } from "../constant/gasTypes.js";
 import { paymentMethod } from "../constant/paymentMethod.js";
 import { paymentStatus } from "../constant/paymentStatus.js";
@@ -32,24 +31,38 @@ const OrganizationGasRequestSchema = new Schema(
           enum: Object.values(gasType),
           required: false,
         },
-        requestType: {
-          type: String,
-          enum: Object.values(gasRequestType),
-          default: gasRequestType.New_Gas,
-          required: false,
+        gasRefillRequests: {
+          gasQuantity: {
+            type: Number,
+            required: false,
+            default: 0,
+          },
+          approvedQuantity: {
+            type: Number,
+            required: false,
+            default: 0,
+          },
         },
-        isCylinderReturned: {
-          type: Boolean,
-          required: false,
-          default: false,
-        },
-        gasQuantity: {
-          type: Number,
-          required: false,
-        },
-        approvedQuantity: {
-          type: Number,
-          required: false,
+        gasNewRequests: {
+          gasQuantity: {
+            type: Number,
+            required: false,
+            default: 0,
+          },
+          approvedQuantity: {
+            type: Number,
+            required: false,
+            default: 0,
+          },
+          isCylinderReturned: {
+            type: Boolean,
+            required: false,
+            default: false,
+          },
+          cylinderReturnedCount: {
+            type: Number,
+            required: false,
+          },
         },
       },
     ],

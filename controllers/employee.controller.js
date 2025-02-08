@@ -21,6 +21,9 @@ export const getEmployeeProfile = async (req, res) => {
     }
 
     const userData = {
+      _id: employee._id,
+      email: employee.email,
+      contact: employee.contact,
       first_name: employee.first_name,
       last_name: employee.last_name,
       username: employee.username,
@@ -144,5 +147,30 @@ export const createNewEmployee = async (req, res) => {
   } catch (error) {
     console.error("Error fetching Employees: ", error.message);
     res.status(400).send({ message: `Error: ${error.message}` });
+  }
+};
+
+/**
+ * Update Employee by email
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const updateEmployeeById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const employee = await Employee.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).select("-password");
+
+    if (!employee) {
+      throw new Error("Employee not found");
+    }
+
+    res.status(200).send({ data: employee });
+  } catch (error) {
+    console.error("Error updating employee: ", error.message);
+    res.status(400).send({ message: error.message });
   }
 };
