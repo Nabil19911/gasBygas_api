@@ -9,6 +9,7 @@ import User from "../models/user.model.js";
 import IndividualGasRequest from "../models/individualgasRequet.model.js";
 import OrganizationGasRequest from "../models/organizationGasRequest.model.js";
 import requestStatus from "../constant/requestStatus.js";
+import Outlet from "../models/outlet.model.js";
 
 /**
  * get Gas Requets
@@ -122,7 +123,7 @@ export const getOutletGasRequest = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
-export const patchOutletGasRequest = async (req, res) => {
+export const updateOutletGasRequestById = async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -147,7 +148,7 @@ export const patchOutletGasRequest = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
-export const patchOrganizationGasRequest = async (req, res) => {
+export const updateOrganizationGasRequestById = async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;
@@ -235,10 +236,23 @@ export const patchOrganizationGasRequest = async (req, res) => {
  */
 export const createIndividualGasRequest = async (req, res) => {
   try {
+    const data = req.body;
     const generateGasToken = generateToken(20);
 
     const currentDate = new Date(); // Get the current date
     currentDate.setDate(currentDate.getDate() + 14); // Add 14 days
+
+    const activeGasRequest = await IndividualGasRequest.find({
+      outletId: data.outletId,
+    });
+    const outlet = await Outlet.findById(data.outletId);
+
+    if (activeGasRequest.length === outlet.gas_request.allowed_qty) {
+      console.error("Token Limit Reached");
+      throw new Error(
+        `Token Limit Reached for ${outlet.branch_code}, Please select a different outlet`
+      );
+    }
 
     const token = await Token({
       token: generateGasToken,
@@ -252,7 +266,7 @@ export const createIndividualGasRequest = async (req, res) => {
     }
 
     const gasRequest = await IndividualGasRequest({
-      ...req.body,
+      ...data,
       tokenId: token._id,
     });
     const gasRequestResponse = await gasRequest.save();
@@ -261,7 +275,7 @@ export const createIndividualGasRequest = async (req, res) => {
       throw new Error("gas Request is not created");
     }
 
-    const user = await User.findById({ _id: req.body.userId });
+    const user = await User.findById({ _id: data.userId });
 
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = path.dirname(__filename);
@@ -288,8 +302,8 @@ export const createIndividualGasRequest = async (req, res) => {
 
     res.status(201).send({ data: { gasRequest, emailRespond, token } });
   } catch (error) {
-    console.error("Error creating customers: ", error.message);
-    res.status(400).send({ message: `Error: ${error.message}` });
+    console.error("Error creating gas request: ", error.message);
+    res.status(400).send({ message: `${error.message}` });
   }
 };
 

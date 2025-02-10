@@ -7,8 +7,8 @@ import {
   getOrganizationGasRequest,
   getOrganizationGasRequestById,
   getOutletGasRequest,
-  patchOrganizationGasRequest,
-  patchOutletGasRequest,
+  updateOutletGasRequestById,
+  updateOrganizationGasRequestById
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -45,7 +45,7 @@ router.get(
 router.patch(
   "/outlet/:id",
   authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
-  patchOutletGasRequest
+  updateOutletGasRequestById
 );
 
 router.get(
@@ -57,7 +57,7 @@ router.get(
 router.patch(
   "/organization/:id",
   authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
-  patchOrganizationGasRequest
+  updateOrganizationGasRequestById
 );
 
 router.post(

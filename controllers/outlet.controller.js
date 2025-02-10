@@ -79,7 +79,7 @@ export const getOutletById = async (req, res) => {
  * @param {Request} req
  * @param {Response} res
  */
-export const patchOutlet = async (req, res) => {
+export const updateOutlet = async (req, res) => {
   try {
     const { id } = req.params;
     const data = req.body;

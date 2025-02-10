@@ -7,7 +7,7 @@ import {
   getAllOutlets,
   getOutletById,
   getOutletGasRequests,
-  patchOutlet,
+  updateOutlet,
   requestNewGas,
 } from "../controllers/outlet.controller.js";
 import authenticate from "../middleware/auth.js";
@@ -26,31 +26,34 @@ router.get(
   getAllOutlets
 );
 
+// get all outlets gas request
 router.get(
   "/gas-request/",
   authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   getAllOutletGasRequests
 );
 
+// get outlet gas request by id
 router.get(
   "/gas-request/:id",
   authenticate([roles.BRANCH_MANAGER]),
   getOutletGasRequests
 );
 
-// get one outlet
+// get outlet by id
 router.get(
   "/:id",
   authenticate([roles.ADMIN, roles.BRANCH_MANAGER, roles.DISPATCH_OFFICER]),
   getOutletById
 );
 
-// patch all outlets
-router.patch("/:id", authenticate([roles.BRANCH_MANAGER]), patchOutlet);
+// patch outlet by id
+router.patch("/:id", authenticate([roles.BRANCH_MANAGER]), updateOutlet);
 
-// create outlet
+// create new outlet
 router.post("/create/", authenticate([roles.ADMIN]), createNewOutlet);
 
+// create gas request for outlet
 router.post(
   "/gas-request/",
   authenticate([roles.BRANCH_MANAGER]),

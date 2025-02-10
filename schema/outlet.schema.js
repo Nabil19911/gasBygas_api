@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import activeStatus from "../constant/activeStatus.js"; // Enum for active status
 import { gasType } from "../constant/gasTypes.js";
 import districts from "../constant/districts.js";
+import schemaModels from "../constant/schemaModels.js";
 
 const { Schema } = mongoose;
 
@@ -29,6 +30,11 @@ const OutletSchema = new Schema(
       required: true,
     },
     gas_request: {
+      scheduleId: {
+        type: Schema.Types.ObjectId,
+        ref: schemaModels.Schedule,
+        required: false,
+      },
       active_until: {
         type: Date,
         required: false,
