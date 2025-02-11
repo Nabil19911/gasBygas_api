@@ -8,7 +8,9 @@ import {
   getOrganizationGasRequestById,
   getOutletGasRequest,
   updateOutletGasRequestById,
-  updateOrganizationGasRequestById
+  updateOrganizationGasRequestById,
+  getIndividualGasRequestById,
+  updateIndividualGasRequestById
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -64,6 +66,19 @@ router.post(
   "/individual/",
   authenticate([roles.ADMIN, roles.BRANCH_MANAGER, roles.CUSTOMER]),
   createIndividualGasRequest
+);
+
+
+router.get(
+  "/individual/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER,]),
+  getIndividualGasRequestById
+);
+
+router.patch(
+  "/individual/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER,]),
+  updateIndividualGasRequestById
 );
 
 router.post(

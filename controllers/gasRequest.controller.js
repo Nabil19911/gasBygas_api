@@ -329,3 +329,55 @@ export const createOrganizationGasRequest = async (req, res) => {
     res.status(400).send({ message: `Error: ${error.message}` });
   }
 };
+
+/**
+ * get individual gas request by ID
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getIndividualGasRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await IndividualGasRequest.findById(id)
+      .populate("userId")
+      .populate("outletId")
+      .populate("scheduleId");
+
+    if (!response) {
+      throw new Error("No Individual gas request fetched");
+    }
+    res.status(201).send({ data: response });
+  } catch (error) {
+    console.error("Error fetching individual gas reqquest: ", error.message);
+    res.status(400).send({ message: error.message });
+  }
+};
+
+/**
+ * update individual gas request
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const updateIndividualGasRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const respond = await IndividualGasRequest.findByIdAndUpdate(
+      id,
+      { $set: data },
+      {
+        new: true,
+      }
+    );
+
+    if (!respond) {
+      throw new Error("update gas request payment failed");
+    }
+
+    res.status(200).send({ data: respond });
+  } catch (error) {
+    console.error("Error updating gas request payment:", error);
+    res.status(500).send({ message: error.message });
+  }
+};
