@@ -10,7 +10,8 @@ import {
   updateOutletGasRequestById,
   updateOrganizationGasRequestById,
   getIndividualGasRequestById,
-  updateIndividualGasRequestById
+  updateIndividualGasRequestById,
+  updateReallocateIndividualGasRequestById,
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -68,16 +69,21 @@ router.post(
   createIndividualGasRequest
 );
 
+router.patch(
+  "/individual/reallocate/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
+  updateReallocateIndividualGasRequestById
+);
 
 router.get(
   "/individual/:id",
-  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER,]),
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   getIndividualGasRequestById
 );
 
 router.patch(
   "/individual/:id",
-  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER,]),
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   updateIndividualGasRequestById
 );
 

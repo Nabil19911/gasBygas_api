@@ -62,6 +62,11 @@ const IndividualGasRequestSchema = new Schema(
         ref: schemaModels.Schedule,
         required: false,
       },
+      fromScheduleId: {
+        type: Schema.Types.ObjectId,
+        ref: schemaModels.Schedule,
+        required: false,
+      },
       comments: {
         type: String,
         required: false,

@@ -381,3 +381,37 @@ export const updateIndividualGasRequestById = async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+/**
+ * update reallocate individual gas request
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const updateReallocateIndividualGasRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const saveData = {
+      ...data,
+      scheduleId: data.reallocateGasRequest.toSheduleId,
+    };
+
+    const respond = await IndividualGasRequest.findByIdAndUpdate(
+      id,
+      { $set: saveData },
+      {
+        new: true,
+      }
+    );
+
+    if (!respond) {
+      throw new Error("update gas request payment failed");
+    }
+
+    res.status(200).send({ data: respond });
+  } catch (error) {
+    console.error("Error updating gas request payment:", error);
+    res.status(500).send({ message: error.message });
+  }
+};
