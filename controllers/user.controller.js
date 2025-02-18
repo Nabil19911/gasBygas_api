@@ -1,10 +1,13 @@
+import bcrypt from "bcrypt";
+import ejs from "ejs";
+import path from "path";
+import { fileURLToPath } from "url";
 import activeStatus from "../constant/activeStatus.js";
 import businessTypeConstant from "../constant/businessType.js";
-import districts from "../constant/districts.js";
 import roles from "../constant/roles.js";
+import { generateToken, mailer } from "../helper/generalHelper.js";
 import { checkIfExists, prepareUserData } from "../helper/userHelper.js";
 import User from "../models/user.model.js";
-import bcrypt from "bcrypt";
 
 /**
  * Get user profile by email
@@ -88,7 +91,6 @@ export const createNewUser = async (req, res) => {
       contact,
       email,
       full_address,
-      password,
     } = req.body;
 
     const organization = organization_details
@@ -131,7 +133,8 @@ export const createNewUser = async (req, res) => {
 
     // Hash the password before saving
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const generatePassword = generateToken(10);
+    const hashedPassword = await bcrypt.hash(generatePassword, saltRounds);
 
     // Prepare the data to be saved
     const data = prepareUserData({
@@ -155,8 +158,28 @@ export const createNewUser = async (req, res) => {
     const customer = new User(data);
     const respond = await customer.save();
 
-    // const user = { username: data.email, role: data.role };
-    // const accessToken = createJWT(user);
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+
+    const templatePath = path.join(
+      __dirname,
+      "..",
+      "emailTemplates",
+      "customerRegister.ejs"
+    );
+    const emailHtml = await ejs.renderFile(templatePath, {
+      password: generatePassword,
+    });
+
+    const mailOptions = {
+      from: process.env.MY_EMAIL,
+      to: email,
+      subject: "Welcome to the Team!",
+      html: emailHtml,
+    };
+
+    const transporter = await mailer(mailOptions);
+    await transporter.sendMail(mailOptions);
 
     res.status(201).send({
       message: "Customer registered successfully.",

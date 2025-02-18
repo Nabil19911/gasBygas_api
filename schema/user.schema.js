@@ -69,8 +69,6 @@ const UserSchema = new Schema(
       },
       nic: {
         type: String,
-        unique: true,
-        sparse: true,
         required: function () {
           return this.business_type === businessTypeConstant.Individual;
         },
