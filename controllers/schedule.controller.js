@@ -1,4 +1,10 @@
+import deliveryStatus from "../constant/deliveryStatus.js";
+import IndividualGasRequest from "../models/individualgasRequet.model.js";
 import Scheduled from "../models/Schedule.model.js";
+import ejs from "ejs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { mailer } from "../helper/generalHelper.js";
 
 /**
  * get Scheduled
@@ -69,6 +75,41 @@ export const updateScheduleById = async (req, res) => {
   try {
     const updateData = req.body;
     const { id } = req.params;
+
+    if (updateData.status === deliveryStatus.OutForDelivery) {
+      let deliveryDate = new Date(updateData.deliveryDate);
+
+      // Subtract 3 days
+      deliveryDate.setDate(deliveryDate.getDate() - 3);
+      updateData.outForDeliveryTime = new Date();
+      const individualGasRequestUsers = await IndividualGasRequest.find({
+        scheduleId: id,
+      }).populate("userId");
+      const emails = individualGasRequestUsers.map((user) => user.userId.email);
+
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
+
+      const templatePath = path.join(
+        __dirname,
+        "..",
+        "emailTemplates",
+        "gasHandover.ejs"
+      );
+      const emailHtml = await ejs.renderFile(templatePath, {
+        date: deliveryDate.toDateString(),
+      });
+
+      const mailOptions = {
+        from: process.env.MY_EMAIL,
+        to: emails,
+        subject: "Welcome to the Team!",
+        html: emailHtml,
+      };
+
+      const transporter = await mailer(mailOptions);
+      await transporter.sendMail(mailOptions);
+    }
 
     const schedule = await Scheduled.findByIdAndUpdate(id, updateData);
     const respond = await schedule.save();

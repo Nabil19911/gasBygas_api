@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Important Notice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffecce;
+        color: #333333;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: #ffaf35;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px;
+        text-align: center;
+      }
+      .content p {
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .content strong {
+        color: #ffaf35;
+      }
+      .button {
+        display: inline-block;
+        margin: 20px auto;
+        background-color: #ffbd59;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .footer {
+        background-color: #ffaf35;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Important Notice</h1>
+      </div>
+      <div class="content">
+        <p>This is a reminder to complete the handover process.</p>
+        <p>
+          Please hand over the <strong>cash</strong> and
+          <strong>cylinder</strong> by the <%= date %>.
+        </p>
+        <p>Failure to do so may result in further action.</p>
+
+        <p>If you have any questions, feel free to reach out to us.</p>
+      </div>
+      <div class="footer">
+        <p>Best regards,</p>
+        <p>The Team</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -8,6 +8,10 @@ const ScheduledSchema = new Schema(
       type: Date,
       required: true,
     },
+    outForDeliveryTime: {
+      type: Date,
+      required: false,
+    },
     district: {
       type: String,
       enum: Object.values(districts),
