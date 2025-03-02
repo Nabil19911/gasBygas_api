@@ -49,6 +49,11 @@ const OutletSchema = new Schema(
         required: false,
         default: 0,
       },
+      allowed_waiting_qty: {
+        type: Number,
+        required: false,
+        default: 3,
+      },
     },
     full_address: {
       district: {

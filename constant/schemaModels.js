@@ -8,6 +8,7 @@ const schemaModels = {
   IndividualGasRequest: "IndividualGasRequest",
   OrganizationGasRequest: "OrganizationGasRequest",
   OutletGasRequest: "OutletGasRequest",
+  GasType: "GasType",
 };
 
 export default schemaModels;

@@ -13,6 +13,7 @@ import stockRouter from "./routes/stock.route.js";
 import gasRequestRouter from "./routes/gasRquest.route.js";
 import scheduleRouter from "./routes/schedule.route.js";
 import tokenRouter from "./routes/token.route.js";
+import gasTypeRouter from "./routes/gasType.route.js";
 import { initializeAdmin, initializeStock } from "./helper/employeeHelper.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -45,6 +46,7 @@ app.use("/api/gas-request", gasRequestRouter);
 app.use("/api/stock", stockRouter);
 app.use("/api/schedule", scheduleRouter);
 app.use("/api/token", tokenRouter);
+app.use("/api/gas-type", gasTypeRouter);
 
 // Get the current directory path using import.meta.url
 const __filename = fileURLToPath(import.meta.url);

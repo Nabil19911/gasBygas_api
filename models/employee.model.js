@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import { model } from "mongoose";
 import schemaModels from "../constant/schemaModels.js";
 import EmployeeSchema from "../schema/employee.schema.js";
