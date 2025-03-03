@@ -1,5 +1,4 @@
 import { Schema } from "mongoose";
-import { gasRequestType } from "../constant/gasRequestType.js";
 import { gasType } from "../constant/gasTypes.js";
 import schemaModels from "../constant/schemaModels.js";
 import deliveryStatus from "../constant/deliveryStatus.js";

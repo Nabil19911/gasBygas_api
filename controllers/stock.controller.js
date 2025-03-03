@@ -9,7 +9,9 @@ import Stock from "../models/stock.model.js";
 export const getStock = async (req, res) => {
   try {
     // Find the first stock document
-    const stock = await Stock.findOne();
+    const stock = await Stock.findOne().populate({
+      path: "stock.gasType", // Populate gasType inside stock array
+    });
 
     if (!stock) {
       res.status(200).send({ data: {}, message: "No stock data found" });
@@ -73,7 +75,10 @@ export const updateStock = async (req, res) => {
       update.gasType = gasType;
 
       // Check if gasType exists in the stock
-      const existingStock = await Stock.findOne({ _id: id, "stock.gasType": gasType });
+      const existingStock = await Stock.findOne({
+        _id: id,
+        "stock.gasType": gasType,
+      });
 
       if (existingStock) {
         // Build update operations for existing gasType

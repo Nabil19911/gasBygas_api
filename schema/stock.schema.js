@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import { Schema } from "mongoose";
+import schemaModels from "../constant/schemaModels.js";
 
-const stockSchema = new mongoose.Schema(
+const stockSchema = new Schema(
   {
     stock: [
       {
@@ -9,7 +10,8 @@ const stockSchema = new mongoose.Schema(
           required: true,
         },
         gasType: {
-          type: String,
+          type: Schema.Types.ObjectId,
+          ref: schemaModels.GasType,
           required: false,
         },
         reservedStock: {
