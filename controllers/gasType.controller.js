@@ -1,6 +1,5 @@
 import GasType from "../models/gasType.modal.js";
 
-
 /**
  * get all gas types
  * @param {Request} req
@@ -9,7 +8,10 @@ import GasType from "../models/gasType.modal.js";
 export const getAllGasTypes = async (req, res) => {
   try {
     const gasTypes = await GasType.find();
-    res.status(200).json(gasTypes);
+    if (gasTypes.length === 0) {
+      return res.status(200).json({ data: [], message: "No gas types found" });
+    }
+    res.status(200).json({ data: gasTypes });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -38,12 +40,12 @@ export const getGasTypeById = async (req, res) => {
  * @param {Response} res
  */
 export const createGasType = async (req, res) => {
-  const gasType = new GasType({
-    name: req.body.name,
-    description: req.body.description,
-  });
-
   try {
+    const gasType = new GasType({
+      name: req.body.name.toUpperCase(),
+      description: req.body.description,
+      price: +req.body.price,
+    });
     const newGasType = await gasType.save();
     res.status(201).json(newGasType);
   } catch (error) {

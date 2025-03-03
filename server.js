@@ -74,7 +74,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
   connectDB();
   initializeAdmin();
-  initializeStock();
+  // initializeStock();
 });
 
 export default app;

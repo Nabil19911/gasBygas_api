@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { gasType } from "../constant/gasTypes.js";
 
 const stockSchema = new mongoose.Schema(
   {
@@ -11,7 +10,6 @@ const stockSchema = new mongoose.Schema(
         },
         gasType: {
           type: String,
-          enum: Object.values(gasType),
           required: false,
         },
         reservedStock: {
