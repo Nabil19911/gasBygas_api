@@ -341,7 +341,8 @@ export const getIndividualGasRequestById = async (req, res) => {
     const response = await IndividualGasRequest.findById(id)
       .populate("userId")
       .populate("outletId")
-      .populate("scheduleId");
+      .populate("scheduleId")
+      .populate("gas.type");
 
     if (!response) {
       throw new Error("No Individual gas request fetched");

@@ -18,7 +18,9 @@ export const checkTokenValidation = async (req, res) => {
 
     const gasRequestRes = await IndividualGasRequest.findOne({
       tokenId: tokenRes._id,
-    }).populate("tokenId");
+    })
+      .populate("tokenId")
+      .populate("gas.type");
 
     if (!tokenRes) {
       throw new Error("Token not found");
