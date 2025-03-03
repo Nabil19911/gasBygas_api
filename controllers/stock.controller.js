@@ -72,8 +72,6 @@ export const updateStock = async (req, res) => {
 
       update.gasType = gasType;
 
-      console.log({updates})
-
       // Check if gasType exists in the stock
       const existingStock = await Stock.findOne({ _id: id, "stock.gasType": gasType });
 
