@@ -247,11 +247,26 @@ export const createIndividualGasRequest = async (req, res) => {
     });
     const outlet = await Outlet.findById(data.outletId);
 
-    if (activeGasRequest.length === outlet.gas_request.allowed_qty) {
+    if (
+      activeGasRequest.length ===
+      outlet.gas_request.allowed_qty + outlet.gas_request.allowed_waiting_qty
+    ) {
       console.error("Token Limit Reached");
       throw new Error(
-        `Token Limit Reached for ${outlet.branch_code}, Please select a different outlet`
+        `Request Limit Reached for ${outlet.branch_code}, Please select a different outlet`
       );
+    }
+
+    const activeToken = activeGasRequest.filter(
+      (gasRequest) => gasRequest.tokenId
+    );
+
+    if (activeToken.length === outlet.gas_request.allowed_qty) {
+      const gasRequest = await IndividualGasRequest({
+        ...data,
+      });
+      await gasRequest.save();
+      return res.status(201).send({ data: { gasRequest } });
     }
 
     const token = await Token({

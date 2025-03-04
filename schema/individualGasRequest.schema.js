@@ -21,7 +21,7 @@ const IndividualGasRequestSchema = new Schema(
     tokenId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Token,
-      required: true,
+      required: false,
     },
     scheduleId: {
       type: Schema.Types.ObjectId,
