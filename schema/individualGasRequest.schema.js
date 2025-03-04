@@ -4,6 +4,7 @@ import { paymentMethod } from "../constant/paymentMethod.js";
 import { paymentStatus } from "../constant/paymentStatus.js";
 import roles from "../constant/roles.js";
 import schemaModels from "../constant/schemaModels.js";
+import activeStatus from "../constant/activeStatus.js";
 
 const IndividualGasRequestSchema = new Schema(
   {
@@ -25,6 +26,19 @@ const IndividualGasRequestSchema = new Schema(
     scheduleId: {
       type: Schema.Types.ObjectId,
       ref: schemaModels.Schedule,
+      required: false,
+    },
+
+    isWaiting: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+
+    status: {
+      type: String,
+      enum: Object.values(activeStatus),
+      default: activeStatus.ACTIVE,
       required: false,
     },
 

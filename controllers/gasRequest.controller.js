@@ -264,6 +264,7 @@ export const createIndividualGasRequest = async (req, res) => {
     if (activeToken.length === outlet.gas_request.allowed_qty) {
       const gasRequest = await IndividualGasRequest({
         ...data,
+        isWaiting: true,
       });
       await gasRequest.save();
       return res.status(201).send({ data: { gasRequest } });
@@ -501,7 +502,7 @@ export const updateReallocateGasRequestToCustomerById = async (req, res) => {
 
     const respond = await IndividualGasRequest.findOneAndUpdate(
       { userId: data.selectedCustomerId },
-      { $set: { tokenId: data.activeToken } },
+      { $set: { tokenId: data.activeToken, isWaiting: false } },
       { new: true }
     );
 
@@ -512,6 +513,7 @@ export const updateReallocateGasRequestToCustomerById = async (req, res) => {
     const saveData = {
       ...data,
       tokenId: null,
+      status: activeStatus.INACTIVE,
     };
 
     await IndividualGasRequest.findOneAndUpdate(
