@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { generateToken, mailer } from "../helper/generalHelper.js";
 import Employee from "../models/employee.model.js";
+import schemaModels from "../constant/schemaModels.js";
 
 /**
  * Get employee profile by username
@@ -15,7 +16,16 @@ export const getEmployeeProfile = async (req, res) => {
 
   try {
     // Fetch the employee by username
-    const employee = await Employee.findOne({ username }).populate("outlet");
+    const employee = await Employee.findOne({ username }).populate({
+      path: "outlet",
+      populate: {
+        path: "cylinders_stock",
+        populate: {
+          path: "type",
+          model: schemaModels.GasType,
+        },
+      },
+    });
     if (!employee) {
       throw new Error("Employee not found");
     }

@@ -39,7 +39,7 @@ export const createNewOutlet = async (req, res) => {
  */
 export const getAllOutlets = async (req, res) => {
   try {
-    const outlets = await Outlet.find();
+    const outlets = await Outlet.find().populate("cylinders_stock.type");
 
     if (!outlets) {
       throw new Error("Outlets are not found");
@@ -61,7 +61,7 @@ export const getOutletById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const outlet = await Outlet.findById(id);
+    const outlet = await Outlet.findById(id).populate("cylinders_stock.type");
 
     if (!outlet) {
       throw new Error("Outlet is not found");

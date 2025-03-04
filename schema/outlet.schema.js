@@ -73,8 +73,8 @@ const OutletSchema = new Schema(
     cylinders_stock: [
       {
         type: {
-          type: String,
-          enum: Object.values(gasType),
+          type: Schema.Types.ObjectId,
+          ref: schemaModels.GasType,
           required: true,
         },
         currentStock: {
