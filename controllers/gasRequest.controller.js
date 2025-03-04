@@ -431,3 +431,98 @@ export const updateReallocateIndividualGasRequestById = async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+/**
+ * update reallocate customer gas request
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const updateReallocateGasRequestToCustomerById = async (req, res) => {
+  try {
+    const data = req.body;
+
+    const currentUser = await User.findById(data.currentCustomerId);
+    if (!currentUser) {
+      throw new Error("Current customer not found");
+    }
+
+    const selectedCustomer = await User.findById(data.selectedCustomerId);
+    if (!selectedCustomer) {
+      throw new Error("Selected customer not found");
+    }
+
+    const token = await Token.findById(data.activeToken);
+
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = path.dirname(__filename);
+    const templateTokenUpdatedPath = path.join(
+      __dirname,
+      "..",
+      "emailTemplates",
+      "customerTokenUpdated.ejs"
+    );
+
+    const emailTokenUpdatedHtml = await ejs.renderFile(
+      templateTokenUpdatedPath,
+      { tokenId: token.token }
+    );
+
+    const templateTokenRevokePath = path.join(
+      __dirname,
+      "..",
+      "emailTemplates",
+      "customerTokenRevoke.ejs"
+    );
+
+    const emailTokenRevokeHtml = await ejs.renderFile(
+      templateTokenRevokePath,
+      {}
+    );
+
+    const mailOptions = [
+      {
+        from: process.env.MY_EMAIL,
+        to: currentUser.email,
+        subject: "Your Gas Token Revoked",
+        html: emailTokenRevokeHtml,
+      },
+      {
+        from: process.env.MY_EMAIL,
+        to: selectedCustomer.email,
+        subject: "Your Gas Token",
+        html: emailTokenUpdatedHtml,
+      },
+    ];
+
+    const transporter = await mailer();
+    await Promise.all(
+      mailOptions.map((options) => transporter.sendMail(options))
+    );
+
+    const respond = await IndividualGasRequest.findOneAndUpdate(
+      { userId: data.selectedCustomerId },
+      { $set: { tokenId: data.activeToken } },
+      { new: true }
+    );
+
+    if (!respond) {
+      throw new Error("Reallocation to customer failed");
+    }
+
+    const saveData = {
+      ...data,
+      tokenId: null,
+    };
+
+    await IndividualGasRequest.findOneAndUpdate(
+      { userId: data.currentCustomerId },
+      { $set: saveData },
+      { new: true }
+    );
+
+    res.status(200).send({ data: respond });
+  } catch (error) {
+    console.error("Error updating reallocation customer failed:", error);
+    res.status(500).send({ message: error.message });
+  }
+};

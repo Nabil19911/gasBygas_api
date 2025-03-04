@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gas Token Update Notification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #ffecce;
+        color: #333333;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background-color: #ffaf35;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px;
+        text-align: center;
+      }
+      .content p {
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .content strong {
+        color: #ffaf35;
+      }
+      .token-box {
+        background-color: #ffbd59;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 20px 0;
+      }
+      .button {
+        display: inline-block;
+        background-color: #ffbd59;
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+      }
+      .footer {
+        background-color: #ffaf35;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Gas Token Updated!</h1>
+      </div>
+      <div class="content">
+        <p>
+          Your gas token has been successfully updated. Below is your new token:
+        </p>
+        <div class="token-box"><%= tokenId %></div>
+        <p>You can use this token to access your gas allocation.</p>
+      </div>
+      <div class="footer">
+        <p>Need help? Contact our support team.</p>
+        <p>Warm regards,<br />The Gas Supply Team</p>
+      </div>
+    </div>
+  </body>
+</html>

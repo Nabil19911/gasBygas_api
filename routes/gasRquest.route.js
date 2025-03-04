@@ -12,6 +12,7 @@ import {
   getIndividualGasRequestById,
   updateIndividualGasRequestById,
   updateReallocateIndividualGasRequestById,
+  updateReallocateGasRequestToCustomerById,
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -73,6 +74,12 @@ router.patch(
   "/individual/reallocate/:id",
   authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   updateReallocateIndividualGasRequestById
+);
+
+router.patch(
+  "/individual/reallocate-customer",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
+  updateReallocateGasRequestToCustomerById
 );
 
 router.get(
