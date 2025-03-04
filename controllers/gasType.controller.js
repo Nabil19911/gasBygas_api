@@ -11,9 +11,9 @@ export const getAllGasTypes = async (req, res) => {
     if (gasTypes.length === 0) {
       return res.status(200).json({ data: [], message: "No gas types found" });
     }
-    res.status(200).json({ data: gasTypes });
+    res.status(200).send({ data: gasTypes });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -28,9 +28,9 @@ export const getGasTypeById = async (req, res) => {
     if (!gasType) {
       return res.status(404).json({ message: "Gas type not found" });
     }
-    res.status(200).json(gasType);
+    res.status(200).send({ data: gasType });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 };
 
@@ -47,9 +47,9 @@ export const createGasType = async (req, res) => {
       price: +req.body.price,
     });
     const newGasType = await gasType.save();
-    res.status(201).json(newGasType);
+    res.status(201).send({ data: newGasType });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).send({ message: error.message });
   }
 };
 
@@ -62,16 +62,16 @@ export const updateGasType = async (req, res) => {
   try {
     const gasType = await GasType.findById(req.params.id);
     if (!gasType) {
-      return res.status(404).json({ message: "Gas type not found" });
+      return res.status(404).send({ message: "Gas type not found" });
     }
 
     gasType.name = req.body.name || gasType.name;
     gasType.description = req.body.description || gasType.description;
 
     const updatedGasType = await gasType.save();
-    res.status(200).json(updatedGasType);
+    res.status(200).send({ data: updatedGasType });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).send({ message: error.message });
   }
 };
 
@@ -84,12 +84,12 @@ export const deleteGasType = async (req, res) => {
   try {
     const gasType = await GasType.findById(req.params.id);
     if (!gasType) {
-      return res.status(404).json({ message: "Gas type not found" });
+      return res.status(404).send({ message: "Gas type not found" });
     }
 
     await gasType.remove();
-    res.status(200).json({ message: "Gas type deleted" });
+    res.status(200).send({ message: "Gas type deleted" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).send({ message: error.message });
   }
 };

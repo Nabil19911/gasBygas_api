@@ -125,9 +125,9 @@ export const requestNewGas = async (req, res) => {
 export const getOutletGasRequests = async (req, res) => {
   try {
     const { id } = req.params;
-    const gasRequest = await OutletGasRequest.find({ outletId: id }).populate(
-      "scheduleId"
-    );
+    const gasRequest = await OutletGasRequest.find({ outletId: id })
+      .populate("scheduleId")
+      .populate("gas.type");
 
     if (!gasRequest) {
       throw new Error("gas request is not found");
@@ -149,7 +149,8 @@ export const getAllOutletGasRequests = async (req, res) => {
   try {
     const gasRequest = await OutletGasRequest.find()
       .populate("scheduleId")
-      .populate("outletId");
+      .populate("outletId")
+      .populate("gas.type");
 
     if (!gasRequest) {
       throw new Error("gas requests are not found");
