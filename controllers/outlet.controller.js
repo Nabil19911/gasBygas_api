@@ -1,3 +1,4 @@
+import schemaModels from "../constant/schemaModels.js";
 import Outlet from "../models/outlet.model.js";
 import OutletGasRequest from "../models/outletGasRequest.model.js";
 
@@ -127,7 +128,13 @@ export const getOutletGasRequests = async (req, res) => {
     const { id } = req.params;
     const gasRequest = await OutletGasRequest.find({ outletId: id })
       .populate("scheduleId")
-      .populate("gas.type");
+      .populate({
+        path: "gas",
+        populate: {
+          path: "type",
+          model: schemaModels.GasType,
+        },
+      });
 
     if (!gasRequest) {
       throw new Error("gas request is not found");
@@ -150,7 +157,13 @@ export const getAllOutletGasRequests = async (req, res) => {
     const gasRequest = await OutletGasRequest.find()
       .populate("scheduleId")
       .populate("outletId")
-      .populate("gas.type");
+      .populate({
+        path: "gas",
+        populate: {
+          path: "type",
+          model: schemaModels.GasType,
+        },
+      });
 
     if (!gasRequest) {
       throw new Error("gas requests are not found");

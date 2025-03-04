@@ -10,6 +10,7 @@ import IndividualGasRequest from "../models/individualgasRequet.model.js";
 import OrganizationGasRequest from "../models/organizationGasRequest.model.js";
 import requestStatus from "../constant/requestStatus.js";
 import Outlet from "../models/outlet.model.js";
+import schemaModels from "../constant/schemaModels.js";
 
 /**
  * get Gas Requets
@@ -105,7 +106,14 @@ export const getOutletGasRequest = async (req, res) => {
 
     const respond = await OutletGasRequest.findById(id)
       .populate("scheduleId")
-      .populate("outletId");
+      .populate("outletId")
+      .populate({
+        path: "gas",
+        populate: {
+          path: "type",
+          model: schemaModels.GasType,
+        },
+      });
 
     if (!respond || respond.length === 0) {
       console.log("No records found for the given filter.");
