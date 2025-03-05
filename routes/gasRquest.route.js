@@ -54,7 +54,7 @@ router.patch(
 
 router.get(
   "/organization/:id",
-  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER]),
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   getOrganizationGasRequestById
 );
 

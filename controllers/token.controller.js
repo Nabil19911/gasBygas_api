@@ -35,6 +35,7 @@ export const checkTokenValidation = async (req, res) => {
       const OrgGasRequestRes = await OrganizationGasRequest.findOne({
         tokenId: tokenRes._id,
       })
+        .populate("userId")
         .populate("tokenId")
         .populate("gas.type");
 
