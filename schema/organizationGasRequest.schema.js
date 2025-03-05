@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import { gasType } from "../constant/gasTypes.js";
+import deliveryStatus from "../constant/deliveryStatus.js";
 import { paymentMethod } from "../constant/paymentMethod.js";
 import { paymentStatus } from "../constant/paymentStatus.js";
 import requestStatus from "../constant/requestStatus.js";
@@ -110,6 +110,13 @@ const OrganizationGasRequestSchema = new Schema(
       },
     },
 
+    status: {
+      type: String,
+      enum: Object.values(deliveryStatus),
+      default: deliveryStatus.Pending,
+      required: false,
+    },
+    
     comment: {
       type: String,
       required: false,

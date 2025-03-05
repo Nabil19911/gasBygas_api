@@ -1,4 +1,6 @@
+import businessTypeConstant from "../constant/businessType.js";
 import IndividualGasRequest from "../models/individualgasRequet.model.js";
+import OrganizationGasRequest from "../models/organizationGasRequest.model.js";
 import Token from "../models/token.model.js";
 
 /**
@@ -11,16 +13,38 @@ export const checkTokenValidation = async (req, res) => {
 
   try {
     const tokenRes = await Token.findOne({ token });
-
+    let gasRequestRes = null;
     if (!tokenRes) {
       throw new Error("Invalid Token");
     }
 
-    const gasRequestRes = await IndividualGasRequest.findOne({
+    const inGasRequestRes = await IndividualGasRequest.findOne({
       tokenId: tokenRes._id,
     })
       .populate("tokenId")
       .populate("gas.type");
+
+    if (inGasRequestRes) {
+      gasRequestRes = {
+        customerType: businessTypeConstant.Individual,
+        ...inGasRequestRes.toObject(),
+      };
+    }
+
+    if (!inGasRequestRes) {
+      const OrgGasRequestRes = await OrganizationGasRequest.findOne({
+        tokenId: tokenRes._id,
+      })
+        .populate("tokenId")
+        .populate("gas.type");
+
+      if (OrgGasRequestRes) {
+        gasRequestRes = {
+          customerType: businessTypeConstant.Organization,
+          ...OrgGasRequestRes.toObject(),
+        };
+      }
+    }
 
     if (!tokenRes) {
       throw new Error("Token not found");

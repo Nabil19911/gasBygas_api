@@ -2,7 +2,7 @@ const deliveryStatus = {
   Pending: "Pending",
   OutForDelivery: "OutForDelivery",
   Delivered: "Delivered",
-  Returned: "Returned",
+  // Returned: "Returned",
   Cancelled: "Cancelled",
 };
 
