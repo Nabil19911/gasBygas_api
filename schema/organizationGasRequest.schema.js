@@ -27,8 +27,8 @@ const OrganizationGasRequestSchema = new Schema(
     gas: [
       {
         type: {
-          type: String,
-          enum: Object.values(gasType),
+          type: Schema.Types.ObjectId,
+          ref: schemaModels.GasType,
           required: false,
         },
         gasRefillRequests: {

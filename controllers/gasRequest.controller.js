@@ -58,7 +58,8 @@ export const getOrganizationGasRequest = async (req, res) => {
 
     const respond = await OrganizationGasRequest.find(filter)
       .populate("userId")
-      .populate("tokenId");
+      .populate("tokenId")
+      .populate("gas.type");
 
     if (!respond || respond.length === 0) {
       console.log("No records found for the given filter.");
@@ -82,7 +83,8 @@ export const getOrganizationGasRequestById = async (req, res) => {
 
     const respond = await OrganizationGasRequest.findById(id)
       .populate("userId")
-      .populate("tokenId");
+      .populate("tokenId")
+      .populate("gas.type");
 
     if (!respond || respond.length === 0) {
       console.log("No records found.");
