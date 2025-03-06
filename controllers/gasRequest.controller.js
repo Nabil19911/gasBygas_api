@@ -410,6 +410,50 @@ export const updateIndividualGasRequestById = async (req, res) => {
 };
 
 /**
+ * delete individual gas request
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const deleteIndividualGasRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    const singleValue = await IndividualGasRequest.findById(id);
+    const tokenId = singleValue.tokenId;
+
+    await Token.findByIdAndUpdate(
+      tokenId,
+      {
+        $set: {
+          status: activeStatus.INACTIVE,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+
+    const respond = await IndividualGasRequest.findByIdAndUpdate(
+      id,
+      { $set: data },
+      {
+        new: true,
+      }
+    );
+
+    if (!respond) {
+      throw new Error("update gas request payment failed");
+    }
+
+    res.status(200).send({ data: respond });
+  } catch (error) {
+    console.error("Error deleting gas request payment:", error);
+    res.status(500).send({ message: error.message });
+  }
+};
+
+/**
  * update reallocate individual gas request
  * @param {Request} req
  * @param {Response} res

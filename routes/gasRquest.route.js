@@ -13,6 +13,7 @@ import {
   updateIndividualGasRequestById,
   updateReallocateIndividualGasRequestById,
   updateReallocateGasRequestToCustomerById,
+  deleteIndividualGasRequestById,
 } from "../controllers/gasRequest.controller.js";
 import authenticate from "../middleware/auth.js";
 
@@ -92,6 +93,12 @@ router.patch(
   "/individual/:id",
   authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   updateIndividualGasRequestById
+);
+
+router.delete(
+  "/individual/:id",
+  authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
+  deleteIndividualGasRequestById
 );
 
 router.post(
