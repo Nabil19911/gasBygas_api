@@ -72,7 +72,7 @@ router.post(
 );
 
 router.patch(
-  "/individual/reallocate/:id",
+  "/individual/reallocate/",
   authenticate([roles.ADMIN, roles.DISPATCH_OFFICER, roles.BRANCH_MANAGER]),
   updateReallocateIndividualGasRequestById
 );

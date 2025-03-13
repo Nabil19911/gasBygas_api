@@ -433,7 +433,7 @@ export const updateIndividualGasRequestById = async (req, res) => {
     );
 
     if (!respond) {
-      throw new Error("update gas request payment failed");
+      throw new Error("Gas request reallocation failed");
     }
 
     res.status(200).send({ data: respond });
@@ -477,7 +477,7 @@ export const deleteIndividualGasRequestById = async (req, res) => {
     );
 
     if (!respond) {
-      throw new Error("update gas request payment failed");
+      throw new Error("delete individual gas request failed");
     }
 
     res.status(200).send({ data: respond });
@@ -494,29 +494,38 @@ export const deleteIndividualGasRequestById = async (req, res) => {
  */
 export const updateReallocateIndividualGasRequestById = async (req, res) => {
   try {
-    const { id } = req.params;
     const data = req.body;
 
     const saveData = {
-      ...data,
+      reallocateGasRequest: {...data.reallocateGasRequest},
       scheduleId: data.reallocateGasRequest.toSheduleId,
     };
 
-    const respond = await IndividualGasRequest.findByIdAndUpdate(
-      id,
-      { $set: saveData },
-      {
-        new: true,
-      }
-    );
+    const activeRequest = data.activeGasRequestIds;
 
-    if (!respond) {
-      throw new Error("update gas request payment failed");
+    if (!Array.isArray(activeRequest) || activeRequest.length === 0) {
+      throw new Error("No active gas requests provided");
     }
 
-    res.status(200).send({ data: respond });
+    // Use Promise.all to wait for all updates
+    const updatedRequests = await Promise.all(
+      activeRequest.map((active) =>
+        IndividualGasRequest.findByIdAndUpdate(
+          active,
+          { $set: saveData },
+          { new: true }
+        )
+      )
+    );
+
+    // Check if any updates failed
+    if (updatedRequests.some((request) => request === null)) {
+      throw new Error("One or more gas requests failed to update");
+    }
+
+    res.status(200).send({ data: updatedRequests });
   } catch (error) {
-    console.error("Error updating gas request payment:", error);
+    console.error("Error updating gas request:", error);
     res.status(500).send({ message: error.message });
   }
 };
