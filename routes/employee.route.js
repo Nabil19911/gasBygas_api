@@ -12,10 +12,10 @@ import authenticate from "../middleware/auth.js";
 const router = Router();
 
 // Default route
-router.get("/", authenticate(roles.ADMIN), getAllEmployees);
+router.get("/", authenticate([roles.ADMIN]), getAllEmployees);
 
 // Default route
-router.post("/", authenticate(roles.ADMIN), getEmployeeByEmail);
+router.post("/", authenticate([roles.ADMIN]), getEmployeeByEmail);
 
 // Get Employee Profile
 router.post(
