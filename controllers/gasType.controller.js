@@ -44,6 +44,7 @@ export const createGasType = async (req, res) => {
     const gasType = new GasType({
       name: req.body.name.toUpperCase(),
       description: req.body.description,
+      cylinder_price: +req.body.cylinder_price,
       price: +req.body.price,
     });
     const newGasType = await gasType.save();

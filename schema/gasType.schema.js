@@ -12,6 +12,10 @@ const GasTypeSchema = new Schema(
       type: Number,
       required: true,
     },
+    cylinder_price: {
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       required: false,
