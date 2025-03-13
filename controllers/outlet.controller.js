@@ -126,7 +126,7 @@ export const requestNewGas = async (req, res) => {
 export const getOutletGasRequests = async (req, res) => {
   try {
     const { id } = req.params;
-    const gasRequest = await OutletGasRequest.find({ outletId: id })
+    const gasRequest = await OutletGasRequest.findOne({ outletId: id })
       .populate("scheduleId")
       .populate({
         path: "gas",
