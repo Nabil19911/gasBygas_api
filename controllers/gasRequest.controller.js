@@ -11,6 +11,7 @@ import OrganizationGasRequest from "../models/organizationGasRequest.model.js";
 import requestStatus from "../constant/requestStatus.js";
 import Outlet from "../models/outlet.model.js";
 import schemaModels from "../constant/schemaModels.js";
+import Stock from "../models/stock.model.js";
 
 /**
  * get Gas Requets
@@ -138,18 +139,51 @@ export const updateOutletGasRequestById = async (req, res) => {
     const { id } = req.params;
     const data = req.body;
 
+    const isApproved =
+      data.headOfficeApproval.status === requestStatus.APPROVED;
+
+    // Update OutletGasRequest
     const respond = await OutletGasRequest.findByIdAndUpdate(id, data, {
       new: true,
     });
 
     if (!respond) {
-      throw new Error("update head office approval failed");
+      throw new Error("Update head office approval failed");
+    }
+
+    if (isApproved) {
+      const outletId = respond.outletId; // Correct outlet ID
+
+      await Promise.all(
+        respond.gas.map(async (item) => {
+          // Update Stock
+          await Stock.updateMany(
+            { "stock.gasType": item.type },
+            {
+              $inc: {
+                "stock.$.reservedStock": item.approvedGasQuantity,
+                "stock.$.currentStock": -item.approvedGasQuantity,
+              },
+            }
+          );
+
+          // Update Outlet's Incoming Stock
+          await Outlet.updateOne(
+            { _id: outletId, "cylinders_stock.type": item.type },
+            {
+              $inc: {
+                "cylinders_stock.$.incomingStock": item.approvedGasQuantity,
+              },
+            }
+          );
+        })
+      );
     }
 
     res.status(200).send({ data: respond });
   } catch (error) {
-    console.error("Error fetching schedules:", error);
-    res.status(500).send({ message: "Error fetching schedules" });
+    console.error("Error updating outlet gas request:", error);
+    res.status(500).send({ message: "Error updating outlet gas request" });
   }
 };
 

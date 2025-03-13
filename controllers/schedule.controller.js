@@ -103,7 +103,7 @@ export const updateScheduleById = async (req, res) => {
       const mailOptions = {
         from: process.env.MY_EMAIL,
         to: emails,
-        subject: "Welcome to the Team!",
+        subject: "Gas Handover Mail",
         html: emailHtml,
       };
 
