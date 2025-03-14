@@ -80,11 +80,10 @@ export const updateScheduleById = async (req, res) => {
     const { id } = req.params;
 
     if (updateData.status === deliveryStatus.Delivered) {
-
       const outlets = await Outlet.find({
         "gas_request.scheduleId": new mongoose.Types.ObjectId(id),
       });
-      
+
       for (const outlet of outlets) {
         const gasStockUpdates = outlet.cylinders_stock.map((cylinder) => ({
           gasType: cylinder.type,
@@ -112,7 +111,7 @@ export const updateScheduleById = async (req, res) => {
                 arrayFilters: [{ "elem.gasType": gasType }],
               }
             );
-        
+
             // Second: Ensure reservedStock does not go negative
             await Stock.updateMany(
               { "stock.gasType": gasType },
@@ -127,7 +126,7 @@ export const updateScheduleById = async (req, res) => {
         }
       }
     }
-
+    
     if (updateData.status === deliveryStatus.OutForDelivery) {
       let deliveryDate = new Date(updateData.deliveryDate);
 
