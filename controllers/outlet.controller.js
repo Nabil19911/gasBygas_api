@@ -1,3 +1,4 @@
+import deliveryStatus from "../constant/deliveryStatus.js";
 import schemaModels from "../constant/schemaModels.js";
 import Outlet from "../models/outlet.model.js";
 import OutletGasRequest from "../models/outletGasRequest.model.js";
@@ -126,7 +127,9 @@ export const requestNewGas = async (req, res) => {
 export const getOutletGasRequests = async (req, res) => {
   try {
     const { id } = req.params;
-    const gasRequest = await OutletGasRequest.findOne({ outletId: id })
+    const gasRequest = await OutletGasRequest.find({
+      outletId: id,
+    })
       .populate("scheduleId")
       .populate({
         path: "gas",
@@ -140,7 +143,11 @@ export const getOutletGasRequests = async (req, res) => {
       throw new Error("gas request is not found");
     }
 
-    res.status(200).send({ data: gasRequest });
+    res.status(200).send({
+      data: gasRequest.find(
+        (item) => item.scheduleId.status === deliveryStatus.Pending
+      ),
+    });
   } catch (error) {
     console.error("Error fetching outlet gas requests by id: ", error.message);
     res.status(400).send({ message: error.message });

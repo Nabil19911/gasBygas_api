@@ -5,6 +5,9 @@ import ejs from "ejs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { mailer } from "../helper/generalHelper.js";
+import Outlet from "../models/outlet.model.js";
+import mongoose from "mongoose";
+import Stock from "../models/stock.model.js";
 
 /**
  * get Scheduled
@@ -75,6 +78,55 @@ export const updateScheduleById = async (req, res) => {
   try {
     const updateData = req.body;
     const { id } = req.params;
+
+    if (updateData.status === deliveryStatus.Delivered) {
+
+      const outlets = await Outlet.find({
+        "gas_request.scheduleId": new mongoose.Types.ObjectId(id),
+      });
+      
+      for (const outlet of outlets) {
+        const gasStockUpdates = outlet.cylinders_stock.map((cylinder) => ({
+          gasType: cylinder.type,
+          incomingStock: cylinder.incomingStock || 0,
+        }));
+
+        // Update Outlet Stock
+        outlet.cylinders_stock.forEach((cylinder) => {
+          cylinder.currentStock += cylinder.incomingStock || 0;
+          cylinder.incomingStock = 0;
+        });
+
+        await outlet.save();
+
+        // Update Stock Collection
+        for (const { gasType, incomingStock } of gasStockUpdates) {
+          if (incomingStock > 0) {
+            // First: Deduct reservedStock
+            await Stock.updateMany(
+              { "stock.gasType": gasType },
+              {
+                $inc: { "stock.$[elem].reservedStock": 0 },
+              },
+              {
+                arrayFilters: [{ "elem.gasType": gasType }],
+              }
+            );
+        
+            // Second: Ensure reservedStock does not go negative
+            await Stock.updateMany(
+              { "stock.gasType": gasType },
+              {
+                $set: { "stock.$[elem].reservedStock": 0 },
+              },
+              {
+                arrayFilters: [{ "elem.gasType": gasType }],
+              }
+            );
+          }
+        }
+      }
+    }
 
     if (updateData.status === deliveryStatus.OutForDelivery) {
       let deliveryDate = new Date(updateData.deliveryDate);

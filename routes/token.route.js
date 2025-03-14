@@ -8,7 +8,7 @@ const router = Router();
 // Check Token
 router.post(
   "/check",
-  authenticate([roles.ADMIN, roles.CUSTOMER, roles.BRANCH_MANAGER]),
+  authenticate([roles.ADMIN, roles.DELIVERY_OFFICER, roles.BRANCH_MANAGER]),
   checkTokenValidation
 );
 
