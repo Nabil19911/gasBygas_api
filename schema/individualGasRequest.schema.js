@@ -30,6 +30,21 @@ const IndividualGasRequestSchema = new Schema(
       required: false,
     },
 
+    handOver: {
+      isRequestSend: {
+        type: Boolean,
+        required: false
+      },
+      requestSendDate: {
+        type: Date,
+        required: false
+      },
+      dueDate: {
+        type: Date,
+        required: false,
+      },
+    },
+
     isWaiting: {
       type: Boolean,
       required: false,

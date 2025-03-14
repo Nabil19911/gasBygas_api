@@ -136,6 +136,21 @@ export const updateScheduleById = async (req, res) => {
       const individualGasRequestUsers = await IndividualGasRequest.find({
         scheduleId: id,
       }).populate("userId");
+
+      if (individualGasRequestUsers.length === 0) {
+        throw new Error("No matching IndividualGasRequest found");
+      }
+
+      await IndividualGasRequest.updateOne(
+        { scheduleId: id },
+        {
+          $set: {
+            "handOver.isRequestSend": true,
+            "handOver.requestSendDate": new Date(),
+            "handOver.dueDate": deliveryDate,
+          },
+        }
+      );
       const emails = individualGasRequestUsers.map((user) => user.userId.email);
 
       const __filename = fileURLToPath(import.meta.url);
