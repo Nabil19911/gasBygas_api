@@ -8,6 +8,7 @@ import roles from "../constant/roles.js";
 import { generateToken, mailer } from "../helper/generalHelper.js";
 import { checkIfExists, prepareUserData } from "../helper/userHelper.js";
 import User from "../models/user.model.js";
+import Employee from "../models/employee.model.js";
 
 /**
  * Get user profile by email
@@ -19,8 +20,6 @@ export const getUserProfile = async (req, res) => {
 
   try {
     const customer = await User.findOne({ email }).select("-password");
-
-    // TODO: find the gas requested user
 
     if (!customer) {
       throw new Error("User not found");
@@ -35,6 +34,45 @@ export const getUserProfile = async (req, res) => {
     res.status(200).send({ data: organizationData });
   } catch (error) {
     console.error("Error fetching user profile: ", error.message);
+    res.status(400).send({ message: `Error: ${error.message}` });
+  }
+};
+
+/**
+ * update user profile by email
+ * @param {Request} req
+ * @param {Response} res
+ */
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { role, _id, password, email, username, ...updateData } = req.body;
+    const isCustomer = role === roles.CUSTOMER;
+    let response;
+
+    console.log(updateData);
+
+    // Hash password if it's provided
+    if (password?.length > 0) {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      updateData.password = hashedPassword;
+    }
+
+    updateData.email = email;
+
+    if (isCustomer && email) {
+      response = await User.updateOne({ _id }, { $set: updateData });
+    }
+
+    if (!isCustomer && username) {
+      response = await Employee.updateOne({ username }, { $set: updateData });
+    }
+
+    console.log(response);
+    res.status(200).send({ data: response });
+  } catch (error) {
+    console.error("Error updating user profile: ", error.message);
     res.status(400).send({ message: `Error: ${error.message}` });
   }
 };
@@ -219,14 +257,14 @@ export const updateUserById = async (req, res) => {
 };
 
 /**
- * update user by email
+ * Get user by email
  * @param {Request} req
  * @param {Response} res
  */
 export const getUserByEmail = async (req, res) => {
   const data = req.body;
   try {
-    // Find and update user by id
+    // Find and Get user by Email
     const customer = await User.findOne(data);
 
     if (!customer) {

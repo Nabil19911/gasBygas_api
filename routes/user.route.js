@@ -6,6 +6,7 @@ import {
   getUserByEmail,
   getUserById,
   getUserProfile,
+  updateProfile,
   updateUserById,
 } from "../controllers/user.controller.js";
 import authenticate from "../middleware/auth.js";
@@ -22,8 +23,24 @@ router.get("/:id", authenticate([roles.ADMIN]), getUserById);
 // update user by id
 router.patch("/:id", authenticate([roles.ADMIN]), updateUserById);
 
+router.patch(
+  "/profile/update/",
+  authenticate([
+    roles.ADMIN,
+    roles.BRANCH_MANAGER,
+    roles.CUSTOMER,
+    roles.DELIVERY_OFFICER,
+    roles.DISPATCH_OFFICER,
+  ]),
+  updateProfile
+);
+
 // Default route
-router.post("/", authenticate([roles.ADMIN, roles.BRANCH_MANAGER]), getUserByEmail);
+router.post(
+  "/",
+  authenticate([roles.ADMIN, roles.BRANCH_MANAGER]),
+  getUserByEmail
+);
 
 // Get customer profile route
 router.post(
