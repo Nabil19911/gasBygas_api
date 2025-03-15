@@ -41,7 +41,7 @@ router.patch(
   updateEmployeeById
 );
 
-// Get Employee Profile
+// Post Employee Profile - Create Employee
 router.post("/create/", authenticate([roles.ADMIN]), createNewEmployee);
 
 export default router;

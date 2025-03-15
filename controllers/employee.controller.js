@@ -69,7 +69,7 @@ export const getAllEmployees = async (req, res) => {
 };
 
 /**
- * Get Employee by email
+ * Get Employee by email - View Employee
  * @param {Request} req
  * @param {Response} res
  */
